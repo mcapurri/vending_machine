@@ -12,7 +12,8 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/api/products", require("./routes/productsRoutes"));
+app.use("/api/products", require("./routes/productRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 
 if (process.env.NODE_ENV === "development") {
   app.use(errorhandler());

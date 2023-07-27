@@ -5,7 +5,11 @@ const productModel = mongoose.Schema(
     amountAvailable: { type: Number, required: true },
     cost: { type: Number, required: true },
     productName: { type: String, required: true },
-    sellerId: { type: String, required: true },
+    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
