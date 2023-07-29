@@ -7,20 +7,18 @@ import {
   UserContext,
   initialState,
 } from "../../Context/UserContext";
+import { logout } from "../../Utils/auth";
 
 function Header() {
   const navigate = useNavigate();
   const { user, dispatch } = useContext<ContextValueType>(UserContext);
 
-  console.log("user Headre", user);
-
   const onLogout = () => {
-    localStorage.removeItem("user");
+    logout();
     dispatch({
       type: "SET_USER",
       payload: initialState,
     });
-    console.log("Logged out");
     navigate("/");
   };
 

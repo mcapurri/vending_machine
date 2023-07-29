@@ -13,9 +13,13 @@ import { Formik, FormikHelpers, FormikValues } from "formik";
 import { useCallback, useContext } from "react";
 import * as Yup from "yup";
 import { ContextValueType, UserContext } from "../../Context/UserContext";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../Utils/auth";
 
 const Login: React.FC = () => {
-  const { user, dispatch } = useContext<ContextValueType>(UserContext);
+  const { dispatch } = useContext<ContextValueType>(UserContext);
+  const navigate = useNavigate();
+  const initialValues = { username: "", password: "" };
 
   const schema = Yup.object().shape({
     username: Yup.string()
@@ -23,11 +27,11 @@ const Login: React.FC = () => {
       .min(3, "Username must be at least 3 characters"),
     password: Yup.string()
       .required("Password is a required")
-      .min(8, "Password must be at least 8 characters"),
+      .min(5, "Password must be at least 5 characters"),
   });
 
   const onSubmit = useCallback(
-    (
+    async (
       values: FormikValues,
       {
         resetForm,
@@ -36,12 +40,26 @@ const Login: React.FC = () => {
         password: string;
       }>
     ) => {
-      console.log("values", values);
+      const { username, password } = values;
+
+      try {
+        const loggedUser = await login({ username, password });
+        dispatch({
+          type: "SET_USER",
+          payload: {
+            username: loggedUser.username,
+            role: loggedUser.role,
+            deposit: loggedUser.deposit,
+          },
+        });
+      } catch (error) {
+        console.log("Error logging in:", error);
+      }
       resetForm();
+      navigate("/");
     },
-    [dispatch]
+    [dispatch, navigate]
   );
-  const initialValues = { username: "", password: "" };
   return (
     <Formik
       initialValues={initialValues}

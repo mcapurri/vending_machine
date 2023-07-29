@@ -34,12 +34,12 @@ export const UserContext = createContext<ContextValueType>({
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
-    // case "SET_USER":
-    //   return {
-    //     username: action?.payload?.username,
-    //     role: action?.payload?.role,
-    //     deposit: action?.payload?.deposit,
-    //   };
+    case "FETCH_USER":
+      return {
+        username: action?.payload?.username,
+        role: action?.payload?.role,
+        deposit: action?.payload?.deposit,
+      };
 
     case "SET_USER":
       return {

@@ -14,9 +14,12 @@ import { Formik, FormikHelpers, FormikValues } from "formik";
 import { useCallback, useContext } from "react";
 import * as Yup from "yup";
 import { ContextValueType, UserContext } from "../../Context/UserContext";
+import { signupUser } from "../../Utils/auth";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
-  const { user, dispatch } = useContext<ContextValueType>(UserContext);
+  const { dispatch } = useContext<ContextValueType>(UserContext);
+  const navigate = useNavigate();
 
   const initialValues = {
     username: "",
@@ -32,15 +35,15 @@ const Register: React.FC = () => {
       .min(3, "Username must be at least 3 characters"),
     password: Yup.string()
       .required("Password is a required")
-      .min(8, "Password must be at least 8 characters"),
+      .min(5, "Password must be at least 5 characters"),
     confirm: Yup.string()
       .required("Confirm your password")
-      .min(8, "Password must be at least 8 characters"),
+      .min(5, "Password must be at least 5 characters"),
     role: Yup.string(),
   });
 
   const onSubmit = useCallback(
-    (
+    async (
       values: FormikValues,
       {
         resetForm,
@@ -52,30 +55,42 @@ const Register: React.FC = () => {
         deposit: number;
       }>
     ) => {
-      console.log("values", values);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(
-          {
-            username: values.username,
-            role: values.role,
-            deposit: values.deposit,
+      const { username, password, confirm, role, deposit } = values;
+
+      if (password !== confirm) {
+        throw new Error("Passwords do not match");
+      }
+
+      try {
+        const registeredUser = await signupUser({
+          username,
+          password,
+          role,
+          deposit,
+        });
+        console.log("registeredUser", registeredUser);
+        dispatch({
+          type: "SET_USER",
+          payload: {
+            username: registeredUser.username,
+            role: registeredUser.role,
+            deposit: registeredUser.deposit,
           },
-          null,
-          2
-        )
-      );
-      dispatch({
-        type: "SET_USER",
-        payload: {
-          username: values.username,
-          role: values.role,
-          deposit: values.deposit,
-        },
-      });
+        });
+      } catch (error) {
+        // const message =
+        //   (error.response &&
+        //     error.response.data &&
+        //     error.response.data.message) ||
+        //   error.message ||
+        //   error.toString();
+        console.log(error);
+      }
+
       resetForm();
+      navigate("/");
     },
-    [dispatch]
+    [dispatch, navigate]
   );
 
   return (
@@ -122,7 +137,6 @@ const Register: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
-                autoComplete="new-password"
                 name="password"
                 label="Password"
                 type="password"
@@ -136,7 +150,6 @@ const Register: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
-                autoComplete="new-password"
                 name="confirm"
                 label="Confirm Password"
                 type="password"
