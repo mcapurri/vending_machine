@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Container,
   Box,
@@ -10,30 +9,17 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
+import { FormControl, InputLabel } from "./style";
+import { FormikValues } from "formik";
+interface RegisterProps {
+  formik: FormikValues;
+}
 
-const Register: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    password2: "",
-    role: "",
-  });
-
-  const { name, email, password, password2, role } = formData;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Submitted");
-  };
-
+const Register: React.FC<RegisterProps> = ({
+  formik,
+}: {
+  formik: FormikValues;
+}) => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -47,7 +33,12 @@ const Register: React.FC = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box
+          component="form"
+          onSubmit={formik.handleSubmit}
+          noValidate
+          sx={{ mt: 1 }}
+        >
           <TextField
             margin="normal"
             required
@@ -57,8 +48,14 @@ const Register: React.FC = () => {
             name="username"
             autoComplete="username"
             autoFocus
-            onChange={handleChange}
+            onChange={formik.handleChange}
+            value={formik.values.username}
           />
+          <p className="error">
+            {formik.errors.username &&
+              formik.touched.username &&
+              formik.errors.username}
+          </p>
           <TextField
             margin="normal"
             required
@@ -67,8 +64,13 @@ const Register: React.FC = () => {
             label="Password"
             type="password"
             id="password"
-            onChange={handleChange}
+            onChange={formik.handleChange}
           />
+          <p className="error">
+            {formik.errors.password &&
+              formik.touched.password &&
+              formik.errors.password}
+          </p>
           <TextField
             margin="normal"
             required
@@ -77,13 +79,28 @@ const Register: React.FC = () => {
             label="Confirm Password"
             type="password"
             id="confirm"
-            onChange={handleChange}
-          />
-          <Select value={2} style={{ width: "100%" }}>
-            <MenuItem value={1}>Buyer</MenuItem>
-            <MenuItem value={2}>Seller</MenuItem>
-          </Select>
-
+            onChange={formik.handleChange}
+          />{" "}
+          <p className="error">
+            {formik.errors.confirm &&
+              formik.touched.confirm &&
+              formik.errors.confirm}
+          </p>
+          <FormControl>
+            <InputLabel>
+              <em>Your Role</em>
+            </InputLabel>
+            <Select
+              displayEmpty
+              value={formik.values.role}
+              onChange={formik.handleChange}
+              label="Username"
+              name="role"
+            >
+              <MenuItem value={"buyer"}>Buyer</MenuItem>
+              <MenuItem value={"seller"}>Seller</MenuItem>
+            </Select>
+          </FormControl>
           <Button
             type="submit"
             fullWidth

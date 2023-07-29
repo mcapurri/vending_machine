@@ -9,8 +9,13 @@ import {
   Button,
   Grid,
 } from "@mui/material";
+import { FormikValues } from "formik";
 
-const Login: React.FC = () => {
+interface LoginProps {
+  formik: FormikValues;
+}
+
+const Login: React.FC<LoginProps> = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Logged in");
