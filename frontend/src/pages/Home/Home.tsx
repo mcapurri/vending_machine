@@ -1,7 +1,9 @@
+import ProductsList from "../ProductsList";
+
 const Home: React.FC = () => {
   return (
     <div>
-      <h1>Home</h1>
+      <ProductsList />
     </div>
   );
 };
