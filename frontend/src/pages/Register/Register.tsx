@@ -6,18 +6,22 @@ import {
   Grid,
   Link,
   TextField,
+  InputLabel,
   MenuItem,
   Select,
 } from "@mui/material";
-import { FormControl, InputLabel } from "./style";
-import { Formik, FormikHelpers, FormikValues } from "formik";
-import { useCallback, useContext } from "react";
+import { ErrorMessage, Formik, FormikHelpers, FormikValues } from "formik";
+import { useCallback, useContext, useState } from "react";
 import * as Yup from "yup";
 import { ContextValueType, UserContext } from "../../Context/UserContext";
 import { signupUser } from "../../Utils/auth";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FormControl } from "./style";
+import Spinner from "../../components/Spinner";
 
 const Register: React.FC = () => {
+  const [error, setError] = useState<string>();
   const { dispatch } = useContext<ContextValueType>(UserContext);
   const navigate = useNavigate();
 
@@ -56,9 +60,12 @@ const Register: React.FC = () => {
       }>
     ) => {
       const { username, password, confirm, role, deposit } = values;
+      console.log("values", values);
 
       if (password !== confirm) {
-        throw new Error("Passwords do not match");
+        setError("Passwords do not match");
+        resetForm();
+        return;
       }
 
       try {
@@ -77,18 +84,20 @@ const Register: React.FC = () => {
             deposit: registeredUser.deposit,
           },
         });
+        navigate("/");
       } catch (error) {
-        // const message =
-        //   (error.response &&
-        //     error.response.data &&
-        //     error.response.data.message) ||
-        //   error.message ||
-        //   error.toString();
-        console.log(error);
+        if (axios.isAxiosError(error)) {
+          const message =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+          setError(message);
+        }
       }
 
       resetForm();
-      navigate("/");
     },
     [dispatch, navigate]
   );
@@ -99,7 +108,14 @@ const Register: React.FC = () => {
       validationSchema={schema}
       onSubmit={onSubmit}
     >
-      {({ handleSubmit, handleChange, values, errors, touched }) => (
+      {({
+        handleSubmit,
+        handleChange,
+        values,
+        errors,
+        touched,
+        isSubmitting,
+      }) => (
         <Container component="main" maxWidth="xs">
           <Box
             sx={{
@@ -109,87 +125,93 @@ const Register: React.FC = () => {
               alignItems: "center",
             }}
           >
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5" pb={6}>
               Sign up
             </Typography>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                autoFocus
-                onChange={handleChange}
-                value={values.username}
-              />
-              <p className="error">
-                {errors.username && touched.username && errors.username}
-              </p>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                onChange={handleChange}
-              />
-              <p className="error">
-                {errors.password && touched.password && errors.password}
-              </p>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="confirm"
-                label="Confirm Password"
-                type="password"
-                id="confirm"
-                onChange={handleChange}
-              />{" "}
-              <p className="error">
-                {errors.confirm && touched.confirm && errors.confirm}
-              </p>
-              <FormControl>
-                <InputLabel>
-                  <em>Your Role</em>
-                </InputLabel>
-                <Select
-                  displayEmpty
-                  value={values.role}
-                  onChange={handleChange}
-                  label="Role"
-                  name="role"
-                >
-                  <MenuItem value={"buyer"}>Buyer</MenuItem>
-                  <MenuItem value={"seller"}>Seller</MenuItem>
-                </Select>
-              </FormControl>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+            <Typography component="h1" variant="h5" color="red">
+              {error}
+            </Typography>
+
+            {isSubmitting ? (
+              <Spinner />
+            ) : (
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ mt: 1 }}
               >
-                Sign Up
-              </Button>
-              <Grid container>
-                <Grid item>
-                  <Link href="/login" variant="body2">
-                    {"Do you already have an account? Log in"}
-                  </Link>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  autoFocus
+                  onChange={handleChange}
+                  value={values.username}
+                />
+                <p className="error">
+                  {errors.username && touched.username && errors.username}
+                </p>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  onChange={handleChange}
+                />
+                <p className="error">
+                  {errors.password && touched.password && errors.password}
+                </p>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="confirm"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirm"
+                  onChange={handleChange}
+                />{" "}
+                <p className="error">
+                  {errors.confirm && touched.confirm && errors.confirm}
+                </p>
+                <FormControl>
+                  <InputLabel>Your Role</InputLabel>
+                  <Select
+                    displayEmpty
+                    value={values.role}
+                    onChange={handleChange}
+                    label="Role"
+                    name="role"
+                  >
+                    <MenuItem value={"buyer"}>Buyer</MenuItem>
+                    <MenuItem value={"seller"}>Seller</MenuItem>
+                  </Select>
+                </FormControl>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign Up
+                </Button>
+                <Grid container>
+                  <Grid item>
+                    <Link href="/login" variant="body2">
+                      {"Do you already have an account? Log in"}
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Box>
+              </Box>
+            )}
           </Box>
         </Container>
       )}

@@ -10,14 +10,10 @@ export interface User {
 
 type State = Omit<User, "password" | "confirm">;
 
-export type Action =
-  | { type: "FETCH_USER"; payload: State }
-  | { type: "SET_USER"; payload: State };
+export type Action = { type: "SET_USER"; payload: State };
 
 export const initialState: State = {
   username: "",
-  // password: "",
-  // confirm: "",
   role: "buyer",
   deposit: 0,
 };
@@ -34,13 +30,6 @@ export const UserContext = createContext<ContextValueType>({
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
-    case "FETCH_USER":
-      return {
-        username: action?.payload?.username,
-        role: action?.payload?.role,
-        deposit: action?.payload?.deposit,
-      };
-
     case "SET_USER":
       return {
         ...state,
@@ -74,7 +63,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
         : null;
 
       dispatch({
-        type: "FETCH_USER",
+        type: "SET_USER",
         payload: parsedLoggedUser,
       });
     } catch (error) {
