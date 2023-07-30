@@ -60,7 +60,6 @@ const Register: React.FC = () => {
       }>
     ) => {
       const { username, password, confirm, role, deposit } = values;
-      console.log("values", values);
 
       if (password !== confirm) {
         setError("Passwords do not match");

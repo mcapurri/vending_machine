@@ -1,44 +1,42 @@
-import React, { useReducer } from "react";
-import { Button } from "@mui/material";
+import React from "react";
+import { Container, Button } from "./style";
+import { CartItem } from "../../pages/ProductsList/ProductsList";
 
-type State = typeof initialState;
 
-export type Action = { type: "INCREMENT" } | { type: "DECREMENT" };
-
-const initialState = { count: 0 };
-
-const reducerCounter = (state: State, action: Action) => {
-  switch (action.type) {
-    case "INCREMENT":
-      return { count: state.count + 1 };
-    case "DECREMENT":
-      return { count: state.count !== 0 ? state.count - 1 : (state.count = 0) };
-    default:
-      return state;
-  }
+interface CounterProps   {
+  item: CartItem;
+  addToCart: (clickedItem: CartItem) => void;
+  removeFromCart: (id: string) => void;
 };
 
-const Counter = () => {
-  const [state, dispatch] = useReducer(reducerCounter, initialState);
+
+
+const Counter: React.FC<CounterProps> = ({
+  item,
+  addToCart,
+  removeFromCart,
+}: {
+  item: CartItem,
+  addToCart: (clickedItem: CartItem) => void,
+  removeFromCart: (id: string) => void;
+}) => {
 
   return (
-    <div>
-      <h2>{state.count}</h2>
+    <Container>
       <Button
-        onClick={() => {
-          dispatch({ type: "DECREMENT" });
-        }}
+        onClick={() => removeFromCart(item.id!)}
+
       >
         <b>-</b>
       </Button>
+      <h2>{item.amount}</h2>
       <Button
-        onClick={() => {
-          dispatch({ type: "INCREMENT" });
-        }}
+        onClick={() => addToCart(item)}
+
       >
         <b>+</b>
       </Button>
-    </div>
+    </Container>
   );
 };
 export default Counter;
