@@ -5,10 +5,6 @@ const User = require("../models/userModel");
 const registerUser = async (req, res) => {
   const { username, password, deposit, role } = req.body;
 
-  if (!username || !password || !deposit || !role) {
-    return res.status(400).json({ message: "Please add all fields" });
-  }
-
   const userExists = await User.findOne({ username });
 
   if (userExists) {

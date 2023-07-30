@@ -62,6 +62,11 @@ const updateProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
+  if (product.sellerId.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -85,6 +90,9 @@ const buyProduct = async (req, res) => {
 
   if (!productId || !amount || amount <= 0) {
     return res.status(400).json({ message: "Invalid productId or amount" });
+  }
+  if (user.role !== "buyer") {
+    res.status(401).json({ message: "User not authorized to buy products" });
   }
 
   try {
