@@ -12,14 +12,14 @@ import {
 import { Formik, FormikHelpers, FormikValues } from 'formik';
 import React, { useCallback, useContext, useState } from 'react';
 import * as Yup from 'yup';
-import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../Utils/API/auth';
 import axios from 'axios';
+import { ContextValueType, UserContext } from '../../Context/UserContext';
+import { login } from '../../Utils/API/auth';
 import Spinner from '../../components/Spinner';
 
 const Login: React.FC = () => {
-  const [error, setError] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>();
   const { dispatch } = useContext<ContextValueType>(UserContext);
   const navigate = useNavigate();
   const initialValues = { username: '', password: '' };
@@ -62,7 +62,7 @@ const Login: React.FC = () => {
             (error.response && error.response.data && error.response.data.message) ||
             error.message ||
             error.toString();
-          setError(message);
+          setErrorMessage(message);
         }
       }
       resetForm();
@@ -86,7 +86,7 @@ const Login: React.FC = () => {
               Log in
             </Typography>
             <Typography component="h1" variant="h5" color="red">
-              {error}
+              {errorMessage}
             </Typography>
 
             {isSubmitting ? (
@@ -128,13 +128,13 @@ const Login: React.FC = () => {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link href="#" variant="body2">
+                    <Link href="/" variant="body2">
                       Forgot password?
                     </Link>
                   </Grid>
                   <Grid item>
                     <Link href="/login" variant="body2">
-                      {"Don't have an account? Sign Up"}
+                      Don't have an account? Sign Up
                     </Link>
                   </Grid>
                 </Grid>

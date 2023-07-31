@@ -22,7 +22,13 @@ function priceRow(amount: number, cost: number) {
 
 function createRow(id: string, productName: string, amount: number, cost: number) {
   const sum = priceRow(amount, cost);
-  return { id, productName, amount, cost, sum };
+  return {
+    id,
+    productName,
+    amount,
+    cost,
+    sum,
+  };
 }
 
 function subtotal(items: readonly CartItem[]) {
@@ -38,9 +44,9 @@ const Cart: React.FC<CartProps> = ({
   addToCart: (clickedItem: CartItem) => void;
   removeFromCart: (id: string) => void;
 }) => {
-  const items = cartItems.map((item) => {
-    return createRow(item.id!, item.productName, item.amount, item.cost);
-  });
+  const items = cartItems.map((item) =>
+    createRow(item.id!, item.productName, item.amount, item.cost)
+  );
 
   const invoiceSubtotal = subtotal(items);
   const invoiceTaxes = TAX_RATE * invoiceSubtotal;
@@ -51,7 +57,7 @@ const Cart: React.FC<CartProps> = ({
       <Table aria-label="spanning table">
         <TableHead>
           <TableRow>
-            <TableCell></TableCell>
+            <TableCell />
             <TableCell>
               <b>Name</b>
             </TableCell>

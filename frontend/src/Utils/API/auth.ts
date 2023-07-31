@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { FormikValues } from 'formik';
+
 const API_URL = '/api/users/';
 
 const signupUser = async (values: FormikValues) => {

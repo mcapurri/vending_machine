@@ -1,6 +1,7 @@
 import React from 'react';
-import ProductsList from '../ProductsList';
 import { Box, useMediaQuery } from '@mui/material';
+import ProductsList from '../ProductsList';
+
 const Home: React.FC = () => {
   const matches = useMediaQuery('(max-width:450px)');
 

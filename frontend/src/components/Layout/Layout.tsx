@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Header from '../Header/Header';
 import { Div } from './style';
 
-export const Layout = () => {
+export function Layout() {
   return (
     <Div>
       <h1>Vendor Machine</h1>
@@ -12,4 +12,4 @@ export const Layout = () => {
       </main>
     </Div>
   );
-};
+}

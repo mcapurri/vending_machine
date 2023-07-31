@@ -1,10 +1,9 @@
 import { FaSignInAlt, FaSignOutAlt, FaUser, FaHome } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
 import { StyledHeader, LogoutButton } from './style';
-import { useContext } from 'react';
 import { ContextValueType, UserContext, initialState } from '../../Context/UserContext';
 import { logout } from '../../Utils/API/auth';
-import React from 'react';
 
 function Header() {
   const navigate = useNavigate();

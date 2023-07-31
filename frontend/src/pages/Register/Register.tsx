@@ -1,3 +1,4 @@
+import React, { useCallback, useContext, useState } from 'react';
 import {
   Container,
   Box,
@@ -11,17 +12,16 @@ import {
   Select,
 } from '@mui/material';
 import { Formik, FormikHelpers, FormikValues } from 'formik';
-import { useCallback, useContext, useState } from 'react';
 import * as Yup from 'yup';
-import { ContextValueType, UserContext } from '../../Context/UserContext';
-import { signupUser } from '../../Utils/API/auth';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ContextValueType, UserContext } from '../../Context/UserContext';
+import { signupUser } from '../../Utils/API/auth';
 import { FormControl } from './style';
 import Spinner from '../../components/Spinner';
 
 const Register: React.FC = () => {
-  const [error, setError] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>();
   const { dispatch } = useContext<ContextValueType>(UserContext);
   const navigate = useNavigate();
 
@@ -62,7 +62,7 @@ const Register: React.FC = () => {
       const { username, password, confirm, role, deposit } = values;
 
       if (password !== confirm) {
-        setError('Passwords do not match');
+        setErrorMessage('Passwords do not match');
         resetForm();
         return;
       }
@@ -74,7 +74,6 @@ const Register: React.FC = () => {
           role,
           deposit,
         });
-        console.log('registeredUser', registeredUser);
         dispatch({
           type: 'SET_USER',
           payload: {
@@ -90,7 +89,7 @@ const Register: React.FC = () => {
             (error.response && error.response.data && error.response.data.message) ||
             error.message ||
             error.toString();
-          setError(message);
+          setErrorMessage(message);
         }
       }
 
@@ -115,7 +114,7 @@ const Register: React.FC = () => {
               Sign up
             </Typography>
             <Typography component="h1" variant="h5" color="red">
-              {error}
+              {errorMessage}
             </Typography>
 
             {isSubmitting ? (
@@ -166,8 +165,8 @@ const Register: React.FC = () => {
                     label="Role"
                     name="role"
                   >
-                    <MenuItem value={'buyer'}>Buyer</MenuItem>
-                    <MenuItem value={'seller'}>Seller</MenuItem>
+                    <MenuItem value="buyer">Buyer</MenuItem>
+                    <MenuItem value="seller">Seller</MenuItem>
                   </Select>
                 </FormControl>
                 <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
@@ -176,7 +175,7 @@ const Register: React.FC = () => {
                 <Grid container>
                   <Grid item>
                     <Link href="/login" variant="body2">
-                      {'Do you already have an account? Log in'}
+                      Do you already have an account? Log in
                     </Link>
                   </Grid>
                 </Grid>

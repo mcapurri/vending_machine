@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from 'react';
+import React, { createContext, useEffect, useReducer, useMemo } from 'react';
 
 export interface User {
   username: string;
@@ -47,12 +47,14 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children: React.ReactNode;
 }) => {
   const [user, dispatch] = useReducer(reducer, initialState);
-  console.log('user', user);
 
-  const contextValue: ContextValueType = {
-    user,
-    dispatch,
-  };
+  const contextValue: ContextValueType = useMemo(
+    () => ({
+      user,
+      dispatch,
+    }),
+    [user]
+  );
 
   useEffect(() => {
     try {
@@ -65,7 +67,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
         payload: parsedLoggedUser,
       });
     } catch (error) {
-      console.error('Error parsing logged user data:', error);
+      console.error(error);
     }
   }, []);
 

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { fetch } from '../../Utils/API/products';
 import { useQuery } from 'react-query';
-import Cart from '../../components/Cart';
 import { Drawer, Grid, Badge } from '@mui/material';
+import { FaShoppingCart as CartIcon } from 'react-icons/fa';
+import { fetch } from '../../Utils/API/products';
+import Cart from '../../components/Cart';
 import { Wrapper, IconButton } from './style';
 import Item from '../../components/Item';
 import Spinner from '../../components/Spinner';
-import { FaShoppingCart as CartIcon } from 'react-icons/fa';
 
 interface Product {
   id?: string;
@@ -25,7 +25,7 @@ const ProductsList: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
 
-  const { data, isLoading, error } = useQuery<CartItem[]>('products', fetch);
+  const { data, isLoading } = useQuery<CartItem[]>('products', fetch);
 
   const getTotalItems = (items: CartItem[]) => items.reduce((acc, item) => acc + item.amount, 0);
 
@@ -49,9 +49,8 @@ const ProductsList: React.FC = () => {
         if (item.id === id) {
           if (item.amount === 1) return acc;
           return [...acc, { ...item, amount: item.amount - 1 }];
-        } else {
-          return [...acc, item];
         }
+        return [...acc, item];
       }, [] as CartItem[])
     );
   };
