@@ -1,4 +1,4 @@
-import { SpinnerContainer, LoadingSpinner } from "./style";
+import { SpinnerContainer, LoadingSpinner } from './style';
 
 function Spinner() {
   return (

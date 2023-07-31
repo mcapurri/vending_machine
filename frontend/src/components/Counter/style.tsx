@@ -1,4 +1,4 @@
-import { Button as ButtonMUI, styled, Box } from "@mui/material";
+import { Button as ButtonMUI, styled, Box } from '@mui/material';
 
 export const Button = styled(ButtonMUI)`
   min-width: 12px;
@@ -10,7 +10,6 @@ export const Button = styled(ButtonMUI)`
   text-decoration: none;
   text-align: center;
   border: 1px solid blue;
-
 
   &:hover {
     background: #575b71;

@@ -1,20 +1,20 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useEffect, useReducer } from 'react';
 
 export interface User {
   username: string;
   password: string;
   confirm: string;
-  role: "buyer" | "seller";
+  role: 'buyer' | 'seller';
   deposit: number;
 }
 
-type State = Omit<User, "password" | "confirm">;
+type State = Omit<User, 'password' | 'confirm'>;
 
-export type Action = { type: "SET_USER"; payload: State };
+export type Action = { type: 'SET_USER'; payload: State };
 
 export const initialState: State = {
-  username: "",
-  role: "buyer",
+  username: '',
+  role: 'buyer',
   deposit: 0,
 };
 
@@ -30,7 +30,7 @@ export const UserContext = createContext<ContextValueType>({
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
-    case "SET_USER":
+    case 'SET_USER':
       return {
         ...state,
         ...action.payload,
@@ -47,7 +47,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children: React.ReactNode;
 }) => {
   const [user, dispatch] = useReducer(reducer, initialState);
-  console.log("user", user);
+  console.log('user', user);
 
   const contextValue: ContextValueType = {
     user,
@@ -56,22 +56,18 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     try {
-      const loggedUser = localStorage.getItem("user");
+      const loggedUser = localStorage.getItem('user');
 
-      const parsedLoggedUser: State = loggedUser
-        ? JSON.parse(loggedUser)
-        : null;
+      const parsedLoggedUser: State = loggedUser ? JSON.parse(loggedUser) : null;
 
       dispatch({
-        type: "SET_USER",
+        type: 'SET_USER',
         payload: parsedLoggedUser,
       });
     } catch (error) {
-      console.error("Error parsing logged user data:", error);
+      console.error('Error parsing logged user data:', error);
     }
   }, []);
 
-  return (
-    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
-  );
+  return <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>;
 };

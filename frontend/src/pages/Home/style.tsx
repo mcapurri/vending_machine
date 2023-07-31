@@ -1,3 +1,3 @@
-import { styled } from "@mui/material";
+import { styled } from '@mui/material';
 
-export const Wrapper = styled("div")``;
+export const Wrapper = styled('div')``;

@@ -1,0 +1,4 @@
+*.lock
+*.json
+*.js
+README.md

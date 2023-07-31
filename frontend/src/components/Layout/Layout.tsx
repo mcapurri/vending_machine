@@ -1,6 +1,6 @@
-import { Outlet } from "react-router-dom";
-import Header from "../Header/Header";
-import { Div } from "./style";
+import { Outlet } from 'react-router-dom';
+import Header from '../Header/Header';
+import { Div } from './style';
 
 export const Layout = () => {
   return (

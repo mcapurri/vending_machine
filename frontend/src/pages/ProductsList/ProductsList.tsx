@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { fetch } from "../../Utils/API/products";
-import { useQuery } from "react-query";
-import Cart from "../../components/Cart";
-import { Drawer, Grid, Badge } from "@mui/material";
-import { Wrapper, IconButton } from "./style";
-import Item from "../../components/Item"
-import Spinner from "../../components/Spinner";
-import { FaShoppingCart as CartIcon } from "react-icons/fa";
+import React, { useState } from 'react';
+import { fetch } from '../../Utils/API/products';
+import { useQuery } from 'react-query';
+import Cart from '../../components/Cart';
+import { Drawer, Grid, Badge } from '@mui/material';
+import { Wrapper, IconButton } from './style';
+import Item from '../../components/Item';
+import Spinner from '../../components/Spinner';
+import { FaShoppingCart as CartIcon } from 'react-icons/fa';
 
 interface Product {
   id?: string;
@@ -16,23 +16,18 @@ interface Product {
   sellerId?: string;
 }
 
-
 export interface CartItem extends Product {
   amount: number;
-  sum: number
+  sum: number;
 }
 
 const ProductsList: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
 
-  
+  const { data, isLoading, error } = useQuery<CartItem[]>('products', fetch);
 
-  const { data, isLoading, error } = useQuery<CartItem[]>("products", fetch);
-
-
-  const getTotalItems = (items: CartItem[]) =>
-    items.reduce((acc, item) => acc + item.amount, 0);
+  const getTotalItems = (items: CartItem[]) => items.reduce((acc, item) => acc + item.amount, 0);
 
   const handleAddToCart = (clickedItem: CartItem) => {
     setCartItems((prev: CartItem[]) => {
@@ -40,9 +35,7 @@ const ProductsList: React.FC = () => {
 
       if (isItemInCart) {
         return prev.map((item) =>
-          item.id === clickedItem.id
-            ? { ...item, amount: item.amount + 1 }
-            : item
+          item.id === clickedItem.id ? { ...item, amount: item.amount + 1 } : item
         );
       }
 
@@ -63,7 +56,9 @@ const ProductsList: React.FC = () => {
     );
   };
 
-  if(isLoading) {return <Spinner />}
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Wrapper>

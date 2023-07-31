@@ -1,7 +1,7 @@
-import React from "react";
-import { Wrapper } from "./style";
-import { Button } from "@mui/material";
-import { CartItem } from "../../pages/ProductsList/ProductsList";
+import React from 'react';
+import { Wrapper } from './style';
+import { Button } from '@mui/material';
+import { CartItem } from '../../pages/ProductsList/ProductsList';
 
 type ItemProps = {
   item: CartItem;

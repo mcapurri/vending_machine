@@ -1,14 +1,10 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser, FaHome } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import { StyledHeader, LogoutButton } from "./style";
-import { useContext } from "react";
-import {
-  ContextValueType,
-  UserContext,
-  initialState,
-} from "../../Context/UserContext";
-import { logout } from "../../Utils/API/auth";
-import React from "react";
+import { FaSignInAlt, FaSignOutAlt, FaUser, FaHome } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { StyledHeader, LogoutButton } from './style';
+import { useContext } from 'react';
+import { ContextValueType, UserContext, initialState } from '../../Context/UserContext';
+import { logout } from '../../Utils/API/auth';
+import React from 'react';
 
 function Header() {
   const navigate = useNavigate();
@@ -17,10 +13,10 @@ function Header() {
   const onLogout = () => {
     logout();
     dispatch({
-      type: "SET_USER",
+      type: 'SET_USER',
       payload: initialState,
     });
-    navigate("/");
+    navigate('/');
   };
 
   const isUserInitialState =

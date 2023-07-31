@@ -8,29 +8,29 @@ import {
   Checkbox,
   Button,
   Grid,
-} from "@mui/material";
-import { Formik, FormikHelpers, FormikValues } from "formik";
-import React, { useCallback, useContext, useState } from "react";
-import * as Yup from "yup";
-import { ContextValueType, UserContext } from "../../Context/UserContext";
-import { useNavigate } from "react-router-dom";
-import { login } from "../../Utils/API/auth";
-import axios from "axios";
-import Spinner from "../../components/Spinner";
+} from '@mui/material';
+import { Formik, FormikHelpers, FormikValues } from 'formik';
+import React, { useCallback, useContext, useState } from 'react';
+import * as Yup from 'yup';
+import { ContextValueType, UserContext } from '../../Context/UserContext';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../Utils/API/auth';
+import axios from 'axios';
+import Spinner from '../../components/Spinner';
 
 const Login: React.FC = () => {
   const [error, setError] = useState<string>();
   const { dispatch } = useContext<ContextValueType>(UserContext);
   const navigate = useNavigate();
-  const initialValues = { username: "", password: "" };
+  const initialValues = { username: '', password: '' };
 
   const schema = Yup.object().shape({
     username: Yup.string()
-      .required("Username is a required field")
-      .min(3, "Username must be at least 3 characters"),
+      .required('Username is a required field')
+      .min(3, 'Username must be at least 3 characters'),
     password: Yup.string()
-      .required("Password is a required")
-      .min(5, "Password must be at least 5 characters"),
+      .required('Password is a required')
+      .min(5, 'Password must be at least 5 characters'),
   });
 
   const onSubmit = useCallback(
@@ -48,20 +48,18 @@ const Login: React.FC = () => {
       try {
         const loggedUser = await login({ username, password });
         dispatch({
-          type: "SET_USER",
+          type: 'SET_USER',
           payload: {
             username: loggedUser.username,
             role: loggedUser.role,
             deposit: loggedUser.deposit,
           },
         });
-        navigate("/");
+        navigate('/');
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
+            (error.response && error.response.data && error.response.data.message) ||
             error.message ||
             error.toString();
           setError(message);
@@ -72,26 +70,15 @@ const Login: React.FC = () => {
     [dispatch, navigate]
   );
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={schema}
-      onSubmit={onSubmit}
-    >
-      {({
-        handleSubmit,
-        handleChange,
-        values,
-        errors,
-        touched,
-        isSubmitting,
-      }) => (
+    <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
+      {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
         <Container component="main" maxWidth="xs">
           <Box
             sx={{
               marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
               minWidth: 300,
             }}
           >
@@ -105,12 +92,7 @@ const Login: React.FC = () => {
             {isSubmitting ? (
               <Spinner />
             ) : (
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
-              >
+              <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                 <TextField
                   margin="normal"
                   required
@@ -123,9 +105,7 @@ const Login: React.FC = () => {
                   onChange={handleChange}
                   value={values.username}
                 />
-                <p className="error">
-                  {errors.username && touched.username && errors.username}
-                </p>
+                <p className="error">{errors.username && touched.username && errors.username}</p>
                 <TextField
                   margin="normal"
                   required
@@ -138,19 +118,12 @@ const Login: React.FC = () => {
                   onChange={handleChange}
                   value={values.password}
                 />
-                <p className="error">
-                  {errors.password && touched.password && errors.password}
-                </p>
+                <p className="error">{errors.password && touched.password && errors.password}</p>
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"
                 />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
+                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                   Log In
                 </Button>
                 <Grid container>

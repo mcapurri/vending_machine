@@ -1,6 +1,6 @@
-import { styled } from "@mui/material";
+import { styled } from '@mui/material';
 
-export const Wrapper = styled("div")`
+export const Wrapper = styled('div')`
   display: flex;
   width: 80vw;
   border: 1px solid lightblue;
