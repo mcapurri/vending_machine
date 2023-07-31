@@ -1,6 +1,6 @@
-import { IconButton as IconButtonMUI, styled } from "@mui/material";
+import { IconButton as IconButtonMUI, styled } from '@mui/material';
 
-export const Wrapper = styled("div")`
+export const Wrapper = styled('div')`
   margin: 40px;
 `;
 
@@ -9,5 +9,5 @@ export const IconButton = styled(IconButtonMUI)`
   z-index: 100;
   right: 20px;
   top: 180px;
-  color: blue
+  color: blue;
 `;

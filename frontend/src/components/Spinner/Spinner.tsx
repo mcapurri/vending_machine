@@ -1,9 +1,9 @@
-import { SpinnerContainer, LoadingSpinner } from "./style";
+import { SpinnerContainer, LoadingSpinner } from './style';
 
 function Spinner() {
   return (
     <SpinnerContainer>
-      <LoadingSpinner></LoadingSpinner>
+      <LoadingSpinner />
     </SpinnerContainer>
   );
 }

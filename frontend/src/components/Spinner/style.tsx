@@ -1,6 +1,6 @@
-import { styled } from "@mui/material";
+import { styled } from '@mui/material';
 
-export const SpinnerContainer = styled("div")`
+export const SpinnerContainer = styled('div')`
   position: fixed;
   top: 0;
   right: 0;
@@ -13,7 +13,7 @@ export const SpinnerContainer = styled("div")`
   align-items: center;
 `;
 
-export const LoadingSpinner = styled("div")`
+export const LoadingSpinner = styled('div')`
   width: 64px;
   height: 64px;
   border: 8px solid;

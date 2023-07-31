@@ -4,7 +4,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon backend/server.js",
+    "client": "cd frontend && yarn start",
+    "prepare": "husky install"
   },
   "author": "Marco Capurri",
   "license": "MIT",
@@ -19,6 +21,7 @@
     "mongoose": "^7.4.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "husky": "^8.0.0"
   }
 }

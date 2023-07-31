@@ -1,6 +1,6 @@
-import { Button, styled } from "@mui/material";
+import { Button, styled } from '@mui/material';
 
-export const StyledHeader = styled("header")`
+export const StyledHeader = styled('header')`
   display: flex;
   width: 90vw;
   justify-content: space-between;
