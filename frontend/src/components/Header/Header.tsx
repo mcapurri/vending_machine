@@ -7,7 +7,8 @@ import {
   UserContext,
   initialState,
 } from "../../Context/UserContext";
-import { logout } from "../../Utils/auth";
+import { logout } from "../../Utils/API/auth";
+import React from "react";
 
 function Header() {
   const navigate = useNavigate();

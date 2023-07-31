@@ -10,11 +10,11 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { ErrorMessage, Formik, FormikHelpers, FormikValues } from "formik";
+import { Formik, FormikHelpers, FormikValues } from "formik";
 import { useCallback, useContext, useState } from "react";
 import * as Yup from "yup";
 import { ContextValueType, UserContext } from "../../Context/UserContext";
-import { signupUser } from "../../Utils/auth";
+import { signupUser } from "../../Utils/API/auth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FormControl } from "./style";
@@ -60,7 +60,6 @@ const Register: React.FC = () => {
       }>
     ) => {
       const { username, password, confirm, role, deposit } = values;
-      console.log("values", values);
 
       if (password !== confirm) {
         setError("Passwords do not match");
