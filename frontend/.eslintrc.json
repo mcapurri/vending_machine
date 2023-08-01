@@ -8,6 +8,8 @@
     "airbnb",
     "airbnb/hooks",
     "airbnb-typescript",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:sonarjs/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended"
@@ -36,7 +38,7 @@
       "jsx": true
     }
   },
-  "plugins": ["@typescript-eslint", "jsx-a11y"],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "max-len": ["warn", 300, 4, { "ignoreUrls": true }],
     "no-param-reassign": ["error", { "props": false }],
