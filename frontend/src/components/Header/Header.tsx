@@ -5,11 +5,11 @@ import { StyledHeader, LogoutButton } from './style';
 import { ContextValueType, UserContext, initialState } from '../../Context/UserContext';
 import { logout } from '../../Utils/API/auth';
 
-function Header() {
+function Header(): JSX.Element {
   const navigate = useNavigate();
   const { user, dispatch } = useContext<ContextValueType>(UserContext);
 
-  const onLogout = () => {
+  const onLogout = (): void => {
     logout();
     dispatch({
       type: 'SET_USER',

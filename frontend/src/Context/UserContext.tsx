@@ -1,21 +1,16 @@
 import React, { createContext, useEffect, useReducer, useMemo } from 'react';
-
-export interface User {
-  username: string;
-  password: string;
-  confirm: string;
-  role: 'buyer' | 'seller';
-  deposit: number;
-}
+import { User } from '../Utils/API/auth';
 
 type State = Omit<User, 'password' | 'confirm'>;
 
 export type Action = { type: 'SET_USER'; payload: State };
 
 export const initialState: State = {
+  id: '',
   username: '',
   role: 'buyer',
   deposit: 0,
+  token: '',
 };
 
 export interface ContextValueType {
@@ -28,7 +23,7 @@ export const UserContext = createContext<ContextValueType>({
   dispatch: () => {},
 });
 
-const reducer = (state: State, action: Action) => {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'SET_USER':
       return {

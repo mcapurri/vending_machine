@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Header from '../Header/Header';
 import { Div } from './style';
 
-export function Layout() {
+export function Layout(): JSX.Element {
   return (
     <Div>
       <h1>Vendor Machine</h1>

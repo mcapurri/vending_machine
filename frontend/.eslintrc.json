@@ -6,13 +6,12 @@
   "extends": [
     "eslint:recommended",
     "airbnb",
-    "airbnb/hooks",
-    "airbnb-typescript",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
-    "plugin:sonarjs/recommended",
-    "plugin:jsx-a11y/recommended",
-    "plugin:prettier/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript",
+    "plugin:jest/recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "prettier"
   ],
   "settings": {
     "react": {
@@ -38,8 +37,18 @@
       "jsx": true
     }
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "import", "jest", "prettier"],
   "rules": {
+    "import/extensions": [
+      2,
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
     "max-len": ["warn", 300, 4, { "ignoreUrls": true }],
     "no-param-reassign": ["error", { "props": false }],
     "no-underscore-dangle": "off",
@@ -64,8 +73,20 @@
       {
         "hoist": "never"
       }
-    ]
+    ],
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ],
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "import/no-extraneous-dependencies": 0,
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
+    "react/prop-types": [0]
   },
+
   "overrides": [
     {
       "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],

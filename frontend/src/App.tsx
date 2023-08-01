@@ -5,7 +5,7 @@ import Home from './pages/Home/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
-function App() {
+function App(): JSX.Element {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Button } from './style';
-import { CartItem } from '../../pages/ProductsList/ProductsList';
+import { CartItem } from '../../Utils/API/products';
 
 interface CounterProps {
   item: CartItem;
@@ -18,7 +18,7 @@ const Counter: React.FC<CounterProps> = ({
   removeFromCart: (id: string) => void;
 }) => (
   <Container>
-    <Button onClick={() => removeFromCart(item.id!)}>
+    <Button onClick={() => removeFromCart(item._id)}>
       <b>-</b>
     </Button>
     <h2>{item.amount}</h2>

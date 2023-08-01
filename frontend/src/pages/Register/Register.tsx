@@ -74,14 +74,18 @@ const Register: React.FC = () => {
           role,
           deposit,
         });
-        dispatch({
-          type: 'SET_USER',
-          payload: {
-            username: registeredUser.username,
-            role: registeredUser.role,
-            deposit: registeredUser.deposit,
-          },
-        });
+        if (registeredUser) {
+          dispatch({
+            type: 'SET_USER',
+            payload: {
+              id: registeredUser.id,
+              username: registeredUser.username,
+              role: registeredUser.role,
+              deposit: registeredUser.deposit,
+              token: registeredUser.token,
+            },
+          });
+        }
         navigate('/');
       } catch (error) {
         if (axios.isAxiosError(error)) {

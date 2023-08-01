@@ -2,7 +2,7 @@ import React from 'react';
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import { Paper, ShopNowButton } from './style';
 import Counter from '../Counter';
-import { CartItem } from '../../pages/ProductsList/ProductsList';
+import { CartItem } from '../../Utils/API/products';
 
 type CartProps = {
   cartItems: CartItem[];
@@ -12,18 +12,18 @@ type CartProps = {
 
 const TAX_RATE = 0.07;
 
-function ccyFormat(num: number) {
+function ccyFormat(num: number): string {
   return `${num.toFixed(2)}`;
 }
 
-function priceRow(amount: number, cost: number) {
+function priceRow(amount: number, cost: number): number {
   return amount * cost;
 }
 
-function createRow(id: string, productName: string, amount: number, cost: number) {
+function createRow(_id: string, productName: string, amount: number, cost: number): CartItem {
   const sum = priceRow(amount, cost);
   return {
-    id,
+    _id,
     productName,
     amount,
     cost,
@@ -31,7 +31,7 @@ function createRow(id: string, productName: string, amount: number, cost: number
   };
 }
 
-function subtotal(items: readonly CartItem[]) {
+function subtotal(items: readonly CartItem[]): number {
   return items.map(({ amount, cost }) => amount * cost).reduce((sum, i) => sum + i, 0);
 }
 
@@ -45,7 +45,7 @@ const Cart: React.FC<CartProps> = ({
   removeFromCart: (id: string) => void;
 }) => {
   const items = cartItems.map((item) =>
-    createRow(item.id!, item.productName, item.amount, item.cost)
+    createRow(item._id, item.productName, item.amount, item.cost)
   );
 
   const invoiceSubtotal = subtotal(items);
@@ -61,9 +61,6 @@ const Cart: React.FC<CartProps> = ({
             <TableCell>
               <b>Name</b>
             </TableCell>
-            {/* <TableCell align="right">
-              <b>Qty</b>
-            </TableCell> */}
             <TableCell align="right">
               <b>Price</b>
             </TableCell>
@@ -74,7 +71,7 @@ const Cart: React.FC<CartProps> = ({
         </TableHead>
         <TableBody>
           {items.map((item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item._id}>
               <TableCell>
                 <Counter addToCart={addToCart} removeFromCart={removeFromCart} item={item} />
               </TableCell>

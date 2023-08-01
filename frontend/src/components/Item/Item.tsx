@@ -1,13 +1,12 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { Wrapper } from './style';
-import { CartItem } from '../../pages/ProductsList/ProductsList';
+import { CartItem } from '../../Utils/API/products';
 
 type ItemProps = {
   item: CartItem;
   handleAddToCart: (clickedItem: CartItem) => void;
 };
-
 const Item: React.FC<ItemProps> = ({
   item,
   handleAddToCart,
