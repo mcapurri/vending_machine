@@ -1,3 +1,6 @@
 import { styled } from '@mui/material';
 
-export const Wrapper = styled('div')``;
+export const Greetings = styled('h2')`
+  margin-left: 10%;
+  font-family: Roboto;
+`;

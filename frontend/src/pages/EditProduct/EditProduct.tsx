@@ -51,8 +51,7 @@ const EditProduct: React.FC = () => {
   const onSubmit = async (values: CartItem, { setSubmitting }: FormikHelpers<CartItem>) => {
     try {
       setSubmitting(true);
-      const edited = await editProductMutation.mutateAsync(values);
-      console.log('edited', edited);
+      await editProductMutation.mutateAsync(values);
     } catch (error) {
       console.error('Error updating product:', error);
     } finally {
@@ -62,8 +61,7 @@ const EditProduct: React.FC = () => {
 
   const handleDeleteClick = async (id: string, resetForm: () => void) => {
     try {
-      const deletedProduct = await deleteItem({ _id: id });
-      console.log('Deleted product:', deletedProduct);
+      await deleteItem({ _id: id });
 
       resetForm();
       navigate('/');

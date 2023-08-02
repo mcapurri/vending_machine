@@ -19,11 +19,14 @@ import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { signupUser } from '../../Utils/API/auth';
 import { FormControl } from './style';
 import Spinner from '../../components/Spinner';
+import { useMutation } from 'react-query';
 
 const Register: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const { dispatch } = useContext<ContextValueType>(UserContext);
   const navigate = useNavigate();
+
+  const registerMutation = useMutation(signupUser);
 
   const initialValues = {
     username: '',
@@ -68,7 +71,7 @@ const Register: React.FC = () => {
       }
 
       try {
-        const registeredUser = await signupUser({
+        const registeredUser = await registerMutation.mutateAsync({
           username,
           password,
           role,

@@ -17,11 +17,15 @@ import axios from 'axios';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { login } from '../../Utils/API/auth';
 import Spinner from '../../components/Spinner';
+import { useMutation } from 'react-query';
 
 const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const { dispatch } = useContext<ContextValueType>(UserContext);
   const navigate = useNavigate();
+
+  const loginMutation = useMutation(login);
+
   const initialValues = { username: '', password: '' };
 
   const schema = Yup.object().shape({
@@ -46,8 +50,7 @@ const Login: React.FC = () => {
       const { username, password } = values;
 
       try {
-        const loggedUser = await login({ username, password });
-        console.log('loggeduser', loggedUser);
+        const loggedUser = await loginMutation.mutateAsync({ username, password });
         if (loggedUser) {
           dispatch({
             type: 'SET_USER',

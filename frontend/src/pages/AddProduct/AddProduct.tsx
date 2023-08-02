@@ -38,14 +38,12 @@ const AddProduct = () => {
       try {
         setSubmitting(true);
 
-        const newProduct: Omit<Product, '_id'> = await addProductMutation.mutateAsync({
+        await addProductMutation.mutateAsync({
           productName,
           cost,
           amountAvailable,
           sellerId: user.id,
         });
-
-        console.log('new product', newProduct);
 
         resetForm();
         setSubmitting(false);

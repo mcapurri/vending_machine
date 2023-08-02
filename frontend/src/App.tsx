@@ -6,7 +6,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
-import { CartItem } from './Utils/API/products';
 
 function App(): JSX.Element {
   return (
