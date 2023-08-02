@@ -17,7 +17,7 @@ const initialValues: Product = {
 const schema = Yup.object().shape({
   productName: Yup.string()
     .required('Name is a required field')
-    .min(3, 'Username must be at least 3 characters'),
+    .min(3, 'Name must be at least 3 characters'),
   cost: Yup.number().required('Cost/unit is required').positive('Cost must be a positive number'),
   amountAvailable: Yup.number()
     .required('Amount available is required')

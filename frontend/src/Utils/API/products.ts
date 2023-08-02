@@ -23,8 +23,7 @@ const headers = {
 };
 
 export const fetch = async (): Promise<CartItem[]> => {
-  const response = await axios.get(`${API_URL}/`);
-
+  const response = await axios.get<CartItem[]>(`${API_URL}/`);
   return response.data;
 };
 
@@ -48,9 +47,26 @@ export const add = async ({
   return response.data;
 };
 
-export const edit = async ({ productName, amountAvailable, cost }: Product): Promise<Product> => {
-  const response = await axios.put('/edit/id', { productName, amountAvailable, cost }, { headers });
+export const edit = async ({
+  _id,
+  productName,
+  amountAvailable,
+  cost,
+}: Product): Promise<Product> => {
+  const response = await axios.put(
+    `${API_URL}/edit/${_id}`,
+    { productName, amountAvailable, cost },
+    { headers }
+  );
 
-  console.log('response.data', response.data);
+  return response.data;
+};
+
+export const deleteItem = async ({ _id }: Pick<Product, '_id'>): Promise<Product> => {
+  console.log(`sending to /edit/${_id}`);
+  console.log('headers', headers);
+
+  const response = await axios.delete(`${API_URL}/edit/${_id}`, { headers });
+  console.log('deleted', response.data);
   return response.data;
 };

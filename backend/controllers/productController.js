@@ -62,27 +62,27 @@ const updateProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  if (product.sellerId.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("User not authorized");
-  }
-
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      res.status(400);
-      console.log("Product not found".red);
-      res.status(200).json({ message: "Product not found" });
+      res.status(404).json({ message: "Product not found" });
+      return;
+    }
+
+    if (product.sellerId.toString() !== req.user.id) {
+      res.status(401);
+      throw new Error("User not authorized");
     }
 
     await Product.deleteOne({ _id: product._id });
-    console.log(`Deleted product ${req.params.id}`.red.underline);
-
+    console.log(`Deleted product ${req.params.id}`.red);
     res.status(200).json({ id: req.params.id });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: "Failed to delete product" });
   }
 };
+
 const buyProduct = async (req, res) => {
   const { amount } = req.body;
   const productId = req.params.id;

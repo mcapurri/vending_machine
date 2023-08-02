@@ -1,34 +1,80 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { Product } from '../../Utils/API/products';
+import { CartItem, edit, fetch, deleteItem, Product } from '../../Utils/API/products';
 import Spinner from '../../components/Spinner';
-
-const initialValues: Product = {
-  id: '',
-  productName: '',
-  amountAvailable: 0,
-  cost: 0,
-};
+import { useMutation, useQuery } from 'react-query';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const schema = Yup.object().shape({
-  username: Yup.string()
-    .required('Username is a required field')
-    .min(3, 'Username must be at least 3 characters'),
-  password: Yup.string()
-    .required('Password is a required')
-    .min(5, 'Password must be at least 5 characters'),
+  productName: Yup.string()
+    .required('Name is a required field')
+    .min(3, 'Name must be at least 3 characters'),
+  cost: Yup.number().required('Cost/unit is required').positive('Cost must be a positive number'),
+  amountAvailable: Yup.number()
+    .required('Amount available is required')
+    .integer('Amount available must be an integer')
+    .min(1, 'At least 1 unit must be added'),
 });
-
-const onSubmit = useCallback(async () => {}, []);
 
 const errorMessage = '';
 
-const EditProduct = () => {
+const EditProduct: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const { data: cachedData, isLoading } = useQuery<CartItem[]>('products', fetch);
+
+  const clickedItem = cachedData?.find((item) => item._id === id);
+
+  const editProductMutation = useMutation(edit);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (!clickedItem) {
+    return <div>Product not found.</div>;
+  }
+
+  const initialValues: CartItem = clickedItem && {
+    _id: clickedItem._id,
+    productName: clickedItem.productName,
+    amountAvailable: clickedItem.amountAvailable || 0,
+    cost: clickedItem.cost,
+    sellerId: clickedItem.sellerId,
+    amount: clickedItem.amount,
+    sum: clickedItem.sum,
+  };
+
+  const onSubmit = async (values: CartItem, { setSubmitting }: FormikHelpers<CartItem>) => {
+    try {
+      setSubmitting(true);
+      const edited = await editProductMutation.mutateAsync(values);
+      console.log('edited', edited);
+    } catch (error) {
+      console.error('Error updating product:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteClick = async (id: string, resetForm: () => void) => {
+    try {
+      const deletedProduct = await deleteItem({ _id: id });
+      console.log('Deleted product:', deletedProduct);
+
+      resetForm();
+      navigate('/');
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
+
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
-      {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
+      {({ handleSubmit, handleChange, values, errors, touched, isSubmitting, resetForm }) => (
         <Container component="main" maxWidth="xs">
           <Box
             sx={{
@@ -53,10 +99,10 @@ const EditProduct = () => {
                   margin="normal"
                   required
                   fullWidth
-                  id="username"
+                  id="productName"
                   label="Name"
-                  name="name"
-                  autoComplete="name"
+                  name="productName"
+                  autoComplete="productName"
                   autoFocus
                   onChange={handleChange}
                   value={values.productName}
@@ -69,10 +115,11 @@ const EditProduct = () => {
                     margin="normal"
                     required
                     fullWidth
-                    name="amount"
+                    name="amountAvailable"
                     label="Amount available"
-                    id="amount"
-                    autoComplete="amount"
+                    id="amountAvailable"
+                    type="number"
+                    autoComplete="amountAvailable"
                     onChange={handleChange}
                     value={values.amountAvailable}
                   />
@@ -83,6 +130,7 @@ const EditProduct = () => {
                     name="cost"
                     label="Price unit"
                     id="cost"
+                    type="number"
                     autoComplete="cost"
                     onChange={handleChange}
                     value={values.cost}
@@ -98,7 +146,7 @@ const EditProduct = () => {
                 </Button>
                 <Button
                   fullWidth
-                  onClick={() => console.log('Deleted')}
+                  onClick={() => handleDeleteClick(values._id, resetForm)}
                   variant="contained"
                   color="error"
                   sx={{ mt: 3, mb: 2 }}

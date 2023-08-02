@@ -40,7 +40,6 @@ const Item: React.FC<ItemProps> = memo(
               variant="outlined"
               href={`/edit/${item._id}`}
               size={matches ? 'small' : 'medium'}
-              item={item}
             >
               Edit
             </EditButton>
