@@ -32,7 +32,7 @@ function createRow(_id: string, productName: string, amount: number, cost: numbe
 }
 
 function subtotal(items: readonly CartItem[]): number {
-  return items.map(({ amount, cost }) => amount * cost).reduce((sum, i) => sum + i, 0);
+  return items.map(({ amount, cost }) => amount * cost!).reduce((sum, i) => sum + i, 0);
 }
 
 const Cart: React.FC<CartProps> = ({
@@ -76,7 +76,7 @@ const Cart: React.FC<CartProps> = ({
                 <Counter addToCart={addToCart} removeFromCart={removeFromCart} item={item} />
               </TableCell>
               <TableCell>{item.productName}</TableCell>
-              <TableCell align="right">{ccyFormat(item.cost)}</TableCell>
+              <TableCell align="right">{ccyFormat(item.cost!)}</TableCell>
               <TableCell align="right">{ccyFormat(item.sum)}</TableCell>
             </TableRow>
           ))}

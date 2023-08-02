@@ -69,7 +69,6 @@ const ProductsList: React.FC = () => {
             <Item item={item} handleAddToCart={handleAddToCart} />
           </Grid>
         ))}
-        )
       </Grid>
     </Wrapper>
   );

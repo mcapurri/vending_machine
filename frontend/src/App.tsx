@@ -4,6 +4,7 @@ import { Layout } from './components/Layout/Layout';
 import Home from './pages/Home/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import AddProduct from './pages/AddProduct';
 
 function App(): JSX.Element {
   return (
@@ -12,6 +13,7 @@ function App(): JSX.Element {
         <Route index element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/add" element={<AddProduct />} />
       </Route>
     </Routes>
   );

@@ -47,14 +47,18 @@ const Login: React.FC = () => {
 
       try {
         const loggedUser = await login({ username, password });
-        dispatch({
-          type: 'SET_USER',
-          payload: {
-            username: loggedUser.username,
-            role: loggedUser.role,
-            deposit: loggedUser.deposit,
-          },
-        });
+        console.log('loggeduser', loggedUser);
+        if (loggedUser) {
+          dispatch({
+            type: 'SET_USER',
+            payload: {
+              id: loggedUser.id,
+              username: loggedUser.username,
+              role: loggedUser.role,
+              deposit: loggedUser.deposit,
+            },
+          });
+        }
         navigate('/');
       } catch (error) {
         if (axios.isAxiosError(error)) {

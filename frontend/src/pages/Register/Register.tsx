@@ -82,7 +82,6 @@ const Register: React.FC = () => {
               username: registeredUser.username,
               role: registeredUser.role,
               deposit: registeredUser.deposit,
-              token: registeredUser.token,
             },
           });
         }

@@ -8,7 +8,7 @@ const Home: React.FC = () => {
   return (
     <Box
       sx={{
-        '& .MuiTextField-root': { width: matches === false ? '35vw' : '70vw' },
+        '& .MuiTextField-root': { width: matches === false ? '40vw' : '70vw', background: 'red' },
       }}
     >
       <ProductsList />

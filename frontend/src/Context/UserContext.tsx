@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useReducer, useMemo } from 'react';
 import { User } from '../Utils/API/auth';
 
-type State = Omit<User, 'password' | 'confirm'>;
+type State = Omit<User, 'password' | 'confirm' | 'token'>;
 
 export type Action = { type: 'SET_USER'; payload: State };
 
@@ -10,7 +10,6 @@ export const initialState: State = {
   username: '',
   role: 'buyer',
   deposit: 0,
-  token: '',
 };
 
 export interface ContextValueType {

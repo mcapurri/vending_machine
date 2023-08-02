@@ -1,4 +1,4 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser, FaHome } from 'react-icons/fa';
+import { FaSignInAlt, FaSignOutAlt, FaUser, FaHome, FaPlus, FaCoins } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useContext } from 'react';
 import { StyledHeader, LogoutButton } from './style';
@@ -18,11 +18,6 @@ function Header(): JSX.Element {
     navigate('/');
   };
 
-  const isUserInitialState =
-    user.username === initialState.username &&
-    user.role === initialState.role &&
-    user.deposit === initialState.deposit;
-
   return (
     <StyledHeader>
       <div>
@@ -31,22 +26,38 @@ function Header(): JSX.Element {
         </Link>
       </div>
       <ul>
-        {!isUserInitialState ? (
-          <li>
-            <LogoutButton onClick={onLogout}>
-              <FaSignOutAlt /> Logout
-            </LogoutButton>
-          </li>
+        {user.id ? (
+          <>
+            {user.role == 'buyer' ? (
+              <li>
+                <Link to="/deposit">
+                  <FaCoins /> <span>Deposit</span>
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link to="/add">
+                  <FaPlus /> <span>Add product</span>
+                </Link>
+              </li>
+            )}
+
+            <li>
+              <LogoutButton onClick={onLogout}>
+                <FaSignOutAlt /> <span>Logout</span>
+              </LogoutButton>
+            </li>
+          </>
         ) : (
           <>
             <li>
               <Link to="/login">
-                <FaSignInAlt /> Login
+                <FaSignInAlt /> <span>Login</span>
               </Link>
             </li>
             <li>
               <Link to="/register">
-                <FaUser /> Sign up
+                <FaUser /> <span>Sign up</span>
               </Link>
             </li>
           </>

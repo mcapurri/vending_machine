@@ -6,7 +6,7 @@ const getProducts = async (req, res) => {
 };
 const addProduct = async (req, res) => {
   const user = req.user;
-  const { amountAvailable, cost, productName } = req.body;
+  const { amountAvailable, cost, productName, sellerId } = req.body;
 
   if (!productName || !cost || !amountAvailable) {
     res
@@ -23,7 +23,7 @@ const addProduct = async (req, res) => {
       amountAvailable,
       cost,
       productName,
-      sellerId: req.user.id,
+      sellerId,
     });
 
     console.log("new product added".green, newProduct);

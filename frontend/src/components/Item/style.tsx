@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 
 export const Wrapper = styled('div')`
   display: flex;
@@ -20,4 +20,10 @@ export const Wrapper = styled('div')`
     padding: 1rem;
     height: 100%;
   }
+`;
+
+export const EditButton = styled(Button)`
+  margin-right: 10px;
+  align-self: center;
+  font-weight: bold;
 `;
