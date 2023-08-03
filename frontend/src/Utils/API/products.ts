@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { User } from './auth';
+import logger from '../logger';
 
 export interface Product {
   _id: string;
@@ -64,6 +65,6 @@ export const edit = async ({
 
 export const deleteItem = async ({ _id }: Pick<Product, '_id'>): Promise<Product> => {
   const response = await axios.delete(`${API_URL}/edit/${_id}`, { headers });
-  console.log('deleted', response.data);
+  logger.log('deleted', response.data);
   return response.data;
 };

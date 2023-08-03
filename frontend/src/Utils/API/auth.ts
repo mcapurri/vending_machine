@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { FormikValues } from 'formik';
+import logger from '../logger';
 
 export interface User {
   id: string;
@@ -60,7 +61,7 @@ const fetchUser = async (): Promise<User> => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching user:', error);
+    logger.error('Error fetching user:', error);
     throw error;
   }
 };
@@ -74,7 +75,7 @@ const addCredit = async (coins: number[]): Promise<number> => {
     const response = await axios.post(`${API_URL}/deposit`, coins, { headers });
     return response.data.deposit;
   } catch (error) {
-    console.error('Error depositing coins:', error);
+    logger.error('Error depositing coins:', error);
     throw error;
   }
 };

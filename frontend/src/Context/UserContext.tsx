@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useReducer, useMemo } from 'react';
 import { User } from '../Utils/API/auth';
+import logger from '../Utils/logger';
 
 type State = Omit<User, 'password' | 'confirm' | 'token'>;
 
@@ -61,7 +62,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
         payload: parsedLoggedUser,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
     }
   }, []);
 

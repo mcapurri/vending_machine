@@ -1,11 +1,13 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
+import { useMutation } from 'react-query';
+import axios from 'axios';
 import { Product, add } from '../../Utils/API/products';
 import Spinner from '../../components/Spinner';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
-import { useMutation } from 'react-query';
+import logger from '../../Utils/logger';
 
 const initialValues: Product = {
   _id: '',
@@ -25,10 +27,9 @@ const schema = Yup.object().shape({
     .min(1, 'At least 1 unit must be added'),
 });
 
-const errorMessage = '';
-
-const AddProduct = () => {
+const AddProduct: React.FC = () => {
   const { user } = useContext<ContextValueType>(UserContext);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { mutateAsync } = useMutation(add);
 
@@ -46,9 +47,12 @@ const AddProduct = () => {
         });
 
         resetForm();
-        setSubmitting(false);
       } catch (error) {
-        console.error('Error adding product:', error);
+        if (axios.isAxiosError(error)) {
+          setErrorMessage(error.message);
+        }
+        logger.error('Error adding product:', error);
+      } finally {
         setSubmitting(false);
       }
     },

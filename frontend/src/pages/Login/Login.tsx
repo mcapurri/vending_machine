@@ -14,10 +14,10 @@ import React, { useCallback, useContext, useState } from 'react';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useMutation } from 'react-query';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { login } from '../../Utils/API/auth';
 import Spinner from '../../components/Spinner';
-import { useMutation } from 'react-query';
 
 const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>();

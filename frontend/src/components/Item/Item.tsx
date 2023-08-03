@@ -26,7 +26,7 @@ const Item: React.FC<ItemProps> = memo(
           <p>{item.productName}</p>
           <h3>€{item.cost}</h3>
         </div>
-        {user.id ? (
+        {/* {user.id ? (
           user.role === 'buyer' ? (
             <Button
               variant="outlined"
@@ -44,7 +44,26 @@ const Item: React.FC<ItemProps> = memo(
               Edit
             </EditButton>
           ) : null
-        ) : null}
+        ) : null} */}
+        {user.id && user.role === 'buyer' && (
+          <Button
+            variant="outlined"
+            onClick={() => handleAddToCart(item)}
+            size={matches ? 'small' : 'medium'}
+          >
+            Add to cart
+          </Button>
+        )}
+
+        {user.id && user.id === item.sellerId && (
+          <EditButton
+            variant="outlined"
+            href={`/edit/${item._id}`}
+            size={matches ? 'small' : 'medium'}
+          >
+            Edit
+          </EditButton>
+        )}
       </Wrapper>
     );
   }

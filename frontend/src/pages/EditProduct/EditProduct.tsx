@@ -1,11 +1,13 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { CartItem, edit, fetch, deleteItem, Product } from '../../Utils/API/products';
-import Spinner from '../../components/Spinner';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { CartItem, edit, fetch, deleteItem } from '../../Utils/API/products';
+import Spinner from '../../components/Spinner';
+import logger from '../../Utils/logger';
 
 const schema = Yup.object().shape({
   productName: Yup.string()
@@ -18,10 +20,10 @@ const schema = Yup.object().shape({
     .min(1, 'At least 1 unit must be added'),
 });
 
-const errorMessage = '';
-
 const EditProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
   const navigate = useNavigate();
 
   const { data: cachedData, isLoading } = useQuery<CartItem[]>('products', fetch);
@@ -48,27 +50,36 @@ const EditProduct: React.FC = () => {
     sum: clickedItem.sum,
   };
 
-  const onSubmit = async (values: CartItem, { setSubmitting }: FormikHelpers<CartItem>) => {
-    try {
-      setSubmitting(true);
-      await mutateAsync(values);
-    } catch (error) {
-      console.error('Error updating product:', error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const onSubmit: (values: CartItem, formikHelpers: FormikHelpers<CartItem>) => void = useCallback(
+    async (values: CartItem, { setSubmitting }: FormikHelpers<CartItem>) => {
+      try {
+        setSubmitting(true);
+        await mutateAsync(values);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          setErrorMessage(error.message);
+        }
+        logger.error('Error updating product:', error);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    []
+  );
 
-  const handleDeleteClick = async (id: string, resetForm: () => void) => {
+  const handleDeleteClick = useCallback(async (_id: string, resetForm: () => void) => {
     try {
-      await deleteItem({ _id: id });
+      await deleteItem({ _id });
 
       resetForm();
       navigate('/');
     } catch (error) {
-      console.error('Error deleting product:', error);
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.message);
+      }
+      logger.error('Error deleting product:', error);
     }
-  };
+  }, []);
 
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>

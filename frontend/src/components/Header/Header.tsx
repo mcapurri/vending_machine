@@ -28,7 +28,7 @@ function Header(): JSX.Element {
       <ul>
         {user.id ? (
           <>
-            {user.role == 'buyer' ? (
+            {user.role === 'buyer' ? (
               <li>
                 <Link to="/deposit">
                   <FaCoins /> <span>Deposit</span>
