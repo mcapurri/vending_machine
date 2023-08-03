@@ -1,13 +1,13 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { User, addCredit } from '../../Utils/API/auth';
 import { Container, Box, Typography, TextField, Button, Grid } from '@mui/material';
-import { Formik, FormikHelpers, Form } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { ContextValueType, UserContext } from '../../Context/UserContext';
-import { useMutation } from 'react-query';
-import { CoinImg } from './style';
-
+import { useMutation, useQuery } from 'react-query';
 import axios from 'axios';
+import { ContextValueType, UserContext } from '../../Context/UserContext';
+import { BigCoinImg, MediumCoinImg, SmallCoinImg } from './style';
+
+import { User, addCredit, fetchUser } from '../../Utils/API/auth';
 
 import fiveCents from '../../assets/5cents.png';
 import tenCents from '../../assets/10cents.png';
@@ -25,13 +25,15 @@ const DepositCredit: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { mutateAsync } = useMutation(addCredit);
 
-  useEffect(() => {
-    if (user.deposit !== undefined) {
-      setDeposit(user.deposit);
-    }
-  }, [user.deposit]);
+  const { data } = useQuery('user', fetchUser);
 
-  const initialValues: Deposit = { deposit: user.deposit };
+  useEffect(() => {
+    if (data) {
+      setDeposit(data.deposit!);
+    }
+  }, [data?.deposit]);
+
+  const initialValues: Deposit = { deposit: data?.deposit };
 
   const schema = Yup.object().shape({
     coins: Yup.array().of(Yup.number()).min(1, 'Please add minimum 5 cents'),
@@ -43,7 +45,7 @@ const DepositCredit: React.FC = () => {
     setCoins((prev) => [...prev, coinValue]);
   }, []);
 
-  const onSubmit = async () => {
+  const onSubmit: () => void = async () => {
     try {
       const totalDeposit = await mutateAsync(coins);
       dispatch({
@@ -53,6 +55,7 @@ const DepositCredit: React.FC = () => {
           ...user,
         },
       });
+
       setDeposit(totalDeposit);
       setCoins([]);
     } catch (error) {
@@ -89,19 +92,39 @@ const DepositCredit: React.FC = () => {
             <Form onSubmit={handleSubmit}>
               <Grid>
                 <Button onClick={() => handleDeposit(5)}>
-                  <CoinImg src={fiveCents} />
+                  <SmallCoinImg
+                    style={{
+                      backgroundImage: `url(${fiveCents})`,
+                    }}
+                  />
                 </Button>
                 <Button onClick={() => handleDeposit(10)}>
-                  <CoinImg src={tenCents} />
+                  <SmallCoinImg
+                    style={{
+                      backgroundImage: `url(${tenCents})`,
+                    }}
+                  />
                 </Button>
                 <Button onClick={() => handleDeposit(20)}>
-                  <CoinImg src={twentyCents} />
+                  <BigCoinImg
+                    style={{
+                      backgroundImage: `url(${twentyCents})`,
+                    }}
+                  />
                 </Button>
                 <Button onClick={() => handleDeposit(50)}>
-                  <CoinImg src={fifthyCents} />
+                  <MediumCoinImg
+                    style={{
+                      backgroundImage: `url(${fifthyCents})`,
+                    }}
+                  />
                 </Button>
                 <Button onClick={() => handleDeposit(100)}>
-                  <CoinImg src={oneEuro} />
+                  <BigCoinImg
+                    style={{
+                      backgroundImage: `url(${oneEuro})`,
+                    }}
+                  />
                 </Button>
               </Grid>
               <TextField type="hidden" value={coins} id="coins" name="coins" margin="none" />

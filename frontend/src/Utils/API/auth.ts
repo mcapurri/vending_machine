@@ -12,11 +12,10 @@ export interface User {
 }
 
 const API_URL = '/api/users';
-const user = localStorage.getItem('user');
-const parsedUser: Omit<User, 'password' | 'confirm'> = user ? JSON.parse(user) : null;
+const token = localStorage.getItem('token');
 
 const headers = {
-  Authorization: `Bearer ${parsedUser?.token}`,
+  Authorization: `Bearer ${token}`,
 };
 
 const signupUser = async (values: FormikValues): Promise<User | null> => {
@@ -29,6 +28,7 @@ const signupUser = async (values: FormikValues): Promise<User | null> => {
         ...response.data,
       })
     );
+    localStorage.setItem('token', response.data.token);
   }
   return {
     id: response.data._id,
@@ -37,7 +37,6 @@ const signupUser = async (values: FormikValues): Promise<User | null> => {
 };
 const login = async (values: FormikValues): Promise<User | null> => {
   const response = await axios.post(`${API_URL}/login`, values);
-
   if (response.data) {
     localStorage.setItem(
       'user',
@@ -46,6 +45,7 @@ const login = async (values: FormikValues): Promise<User | null> => {
         ...response.data,
       })
     );
+    localStorage.setItem('token', response.data.token);
   }
 
   return {
@@ -54,11 +54,22 @@ const login = async (values: FormikValues): Promise<User | null> => {
   };
 };
 
+const fetchUser = async (): Promise<User> => {
+  try {
+    const response = await axios.get(`${API_URL}/fetch`, { headers });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;
+  }
+};
+
 const logout = (): void => {
   localStorage.removeItem('user');
 };
 
-const addCredit = async (coins: number[]) => {
+const addCredit = async (coins: number[]): Promise<number> => {
   try {
     const response = await axios.post(`${API_URL}/deposit`, coins, { headers });
     return response.data.deposit;
@@ -68,4 +79,4 @@ const addCredit = async (coins: number[]) => {
   }
 };
 
-export { signupUser, login, logout, addCredit };
+export { signupUser, login, fetchUser, logout, addCredit };

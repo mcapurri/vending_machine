@@ -56,6 +56,22 @@ const loginUser = async (req, res) => {
   }
 };
 
+const fetchUser = async (req, res) => {
+  const { username } = req.user;
+  try {
+    const user = await User.findOne({ username });
+
+    res.json({
+      id: user._id,
+      username: user.username,
+      deposit: user.deposit,
+      role: user.role,
+    });
+  } catch (error) {
+    res.status(400).json({ message: "Error fetching user " });
+  }
+};
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "24h",
@@ -118,6 +134,7 @@ const resetDeposit = async (req, res) => {
 };
 
 module.exports = {
+  fetchUser,
   registerUser,
   loginUser,
   depositCredit,
