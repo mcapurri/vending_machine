@@ -26,7 +26,7 @@ const Register: React.FC = () => {
   const { dispatch } = useContext<ContextValueType>(UserContext);
   const navigate = useNavigate();
 
-  const registerMutation = useMutation(signupUser);
+  const { mutateAsync } = useMutation(signupUser);
 
   const initialValues = {
     username: '',
@@ -71,7 +71,7 @@ const Register: React.FC = () => {
       }
 
       try {
-        const registeredUser = await registerMutation.mutateAsync({
+        const registeredUser = await mutateAsync({
           username,
           password,
           role,

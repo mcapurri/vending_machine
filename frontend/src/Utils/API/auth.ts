@@ -12,6 +12,12 @@ export interface User {
 }
 
 const API_URL = '/api/users';
+const user = localStorage.getItem('user');
+const parsedUser: Omit<User, 'password' | 'confirm'> = user ? JSON.parse(user) : null;
+
+const headers = {
+  Authorization: `Bearer ${parsedUser?.token}`,
+};
 
 const signupUser = async (values: FormikValues): Promise<User | null> => {
   const response = await axios.post(`${API_URL}/register`, values);
@@ -52,4 +58,14 @@ const logout = (): void => {
   localStorage.removeItem('user');
 };
 
-export { signupUser, login, logout };
+const addCredit = async (coins: number[]) => {
+  try {
+    const response = await axios.post(`${API_URL}/deposit`, coins, { headers });
+    return response.data.deposit;
+  } catch (error) {
+    console.error('Error depositing coins:', error);
+    throw error;
+  }
+};
+
+export { signupUser, login, logout, addCredit };

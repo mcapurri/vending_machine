@@ -30,7 +30,7 @@ const errorMessage = '';
 const AddProduct = () => {
   const { user } = useContext<ContextValueType>(UserContext);
 
-  const addProductMutation = useMutation(add);
+  const { mutateAsync } = useMutation(add);
 
   const onSubmit = useCallback(
     async (values: Product, { resetForm, setSubmitting }: FormikHelpers<Product>) => {
@@ -38,9 +38,9 @@ const AddProduct = () => {
       try {
         setSubmitting(true);
 
-        await addProductMutation.mutateAsync({
+        await mutateAsync({
           productName,
-          cost,
+          cost: Number(cost.toFixed(2)),
           amountAvailable,
           sellerId: user.id,
         });

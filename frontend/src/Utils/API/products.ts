@@ -63,9 +63,6 @@ export const edit = async ({
 };
 
 export const deleteItem = async ({ _id }: Pick<Product, '_id'>): Promise<Product> => {
-  console.log(`sending to /edit/${_id}`);
-  console.log('headers', headers);
-
   const response = await axios.delete(`${API_URL}/edit/${_id}`, { headers });
   console.log('deleted', response.data);
   return response.data;

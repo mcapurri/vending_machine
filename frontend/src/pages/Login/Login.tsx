@@ -24,7 +24,7 @@ const Login: React.FC = () => {
   const { dispatch } = useContext<ContextValueType>(UserContext);
   const navigate = useNavigate();
 
-  const loginMutation = useMutation(login);
+  const { mutateAsync } = useMutation(login);
 
   const initialValues = { username: '', password: '' };
 
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
       const { username, password } = values;
 
       try {
-        const loggedUser = await loginMutation.mutateAsync({ username, password });
+        const loggedUser = await mutateAsync({ username, password });
         if (loggedUser) {
           dispatch({
             type: 'SET_USER',

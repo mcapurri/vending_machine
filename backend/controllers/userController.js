@@ -63,13 +63,10 @@ const generateToken = (id) => {
 };
 
 const depositCredit = async (req, res) => {
-  const { coins } = req.body;
+  const coins = req.body;
   const user = req.user;
 
   const validCoins = [5, 10, 20, 50, 100];
-
-  console.log("user", user);
-  console.log("coins", coins);
 
   if (!coins || !Array.isArray(coins) || coins.length === 0) {
     return res

@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
+import DepositCredit from './pages/DepositCredit';
 
 function App(): JSX.Element {
   return (
@@ -16,6 +17,7 @@ function App(): JSX.Element {
         <Route path="/login" element={<Login />} />
         <Route path="/add" element={<AddProduct />} />
         <Route path="/edit/:id" element={<EditProduct />} />
+        <Route path="/deposit" element={<DepositCredit />} />
       </Route>
     </Routes>
   );

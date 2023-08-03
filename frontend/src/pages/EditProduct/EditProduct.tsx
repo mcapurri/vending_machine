@@ -28,7 +28,7 @@ const EditProduct: React.FC = () => {
 
   const clickedItem = cachedData?.find((item) => item._id === id);
 
-  const editProductMutation = useMutation(edit);
+  const { mutateAsync } = useMutation(edit);
 
   if (isLoading) {
     return <Spinner />;
@@ -51,7 +51,7 @@ const EditProduct: React.FC = () => {
   const onSubmit = async (values: CartItem, { setSubmitting }: FormikHelpers<CartItem>) => {
     try {
       setSubmitting(true);
-      await editProductMutation.mutateAsync(values);
+      await mutateAsync(values);
     } catch (error) {
       console.error('Error updating product:', error);
     } finally {
