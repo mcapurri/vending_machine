@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Container, Box, Typography, TextField, Button, Grid } from '@mui/material';
+import { Container, Box, Typography, TextField, Button, Grid, useMediaQuery } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQuery } from 'react-query';
@@ -25,7 +25,10 @@ const DepositCredit: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { mutateAsync } = useMutation(addCredit);
 
+  const matches = useMediaQuery('(max-width:450px)');
+
   const { data } = useQuery('user', fetchUser);
+
   useEffect(() => {
     if (data) {
       setDeposit(data.deposit!);
@@ -71,7 +74,7 @@ const DepositCredit: React.FC = () => {
   return (
     <Formik initialValues={initialValues!} validationSchema={schema} onSubmit={onSubmit}>
       {({ handleSubmit, errors, touched }) => (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth={matches ? 'xs' : 'md'}>
           <Box
             sx={{
               marginTop: 8,
@@ -79,10 +82,11 @@ const DepositCredit: React.FC = () => {
               flexDirection: 'column',
               alignItems: 'center',
               minWidth: 300,
+              height: '100vh',
             }}
           >
             <Typography component="h1" variant="h5" pb="6">
-              Your new deposit is{' '}
+              New deposit is{' '}
               {(amount / 100).toLocaleString('de-DE', {
                 style: 'currency',
                 currency: 'EUR',
@@ -93,7 +97,7 @@ const DepositCredit: React.FC = () => {
               {errorMessage}
             </Typography>
             <Form onSubmit={handleSubmit}>
-              <Grid>
+              <Grid mt={4}>
                 <Button onClick={() => handleDeposit(5)}>
                   <SmallCoinImg
                     style={{
@@ -131,14 +135,14 @@ const DepositCredit: React.FC = () => {
                 </Button>
               </Grid>
               <TextField type="hidden" value={coins} id="coins" name="coins" margin="none" />
-              <Typography component="h1" variant="h5" pb="6">
-                Your total credit is now{' '}
+              <Typography component="h1" variant="h5" pb="6" mt={5}>
+                Your current credit is{' '}
                 {(deposit / 100).toLocaleString('de-DE', {
                   style: 'currency',
                   currency: 'EUR',
                 })}
               </Typography>
-              <Typography component="p" className="error">
+              <Typography component="p" className="error" mb={8}>
                 {errors.deposit && touched.deposit && errors.deposit}
               </Typography>
               <Button type="submit" fullWidth variant="contained" color="primary">

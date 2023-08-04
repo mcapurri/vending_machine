@@ -6,6 +6,8 @@ export const Wrapper = styled('div')`
   border: 1px solid lightblue;
   border-radius: 20px;
   justify-content: space-between;
+  align-items: center;
+  height: 100%;
 
   button {
     border-radius: 10px;
@@ -19,6 +21,10 @@ export const Wrapper = styled('div')`
     font-family: Arial, Helvetica, sans-serif;
     padding: 1rem;
     height: 100%;
+  }
+
+  @media only screen and (min-width: 550px) {
+    width: 60vw;
   }
 `;
 

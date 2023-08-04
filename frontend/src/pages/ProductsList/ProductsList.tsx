@@ -71,10 +71,16 @@ const ProductsList: React.FC = () => {
         </Badge>
       </IconButton>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ display: 'flex', flexDirection: 'column' }}>
         {data?.map((item: CartItem) => {
           return user.role === 'seller' && user.id === item.sellerId ? (
-            <Grid key={item._id} item xs={12} sm={4}>
+            <Grid
+              key={item._id}
+              item
+              xs={12}
+              sm={4}
+              sx={{ justifyContent: 'center', alignItems: 'flex-end' }}
+            >
               <Item item={item} handleAddToCart={handleAddToCart} />
             </Grid>
           ) : user.role === 'buyer' ? (

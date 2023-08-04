@@ -24,7 +24,6 @@ const Item: React.FC<ItemProps> = memo(
 
     return (
       <Wrapper>
-        {}
         <div>
           <Typography component="p" variant="h6">
             {item.productName}

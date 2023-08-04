@@ -12,7 +12,9 @@ const Home: React.FC = () => {
   return (
     <Box
       sx={{
-        '& .MuiTextField-root': { width: matches === false ? '40vw' : '70vw', background: 'red' },
+        '& .MuiTextField-root': {
+          width: matches === false ? '40vw' : '70vw',
+        },
       }}
     >
       {user.username && <Greetings>Welcome back, {user.username}</Greetings>}
