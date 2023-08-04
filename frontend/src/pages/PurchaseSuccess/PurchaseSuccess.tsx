@@ -18,20 +18,11 @@ const PurchaseSuccess: React.FC = () => {
   const { purchaseData, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal } = state;
   const { purchasedProducts, change } = purchaseData;
 
-  const uniqueNumbers: number[] = [];
   const occurrences: { [key: number]: number } = {};
 
-  for (const num of change) {
-    if (!uniqueNumbers.includes(num)) {
-      uniqueNumbers.push(num);
-    }
-
-    if (!occurrences[num]) {
-      occurrences[num] = 1;
-    } else {
-      occurrences[num] += 1;
-    }
-  }
+  change.forEach((num: number) => {
+    occurrences[num] = (occurrences[num] || 0) + 1;
+  });
 
   return (
     <Wrapper>
@@ -93,14 +84,16 @@ const PurchaseSuccess: React.FC = () => {
       <Typography component="h1" variant="h6" ml={3} mt={3}>
         Thank you for choosing us
       </Typography>
-      <Typography component="h1" variant="h6" ml={3} mt={3}>
-        Your change is:
-      </Typography>
-      {uniqueNumbers.map((num) => (
-        <Typography key={num} component="p" variant="body1" ml={3}>
-          Coin: {num} x {occurrences[num]}
+      <Typography component="div">
+        <Typography component="h1" variant="h6" ml={3} mt={3}>
+          Your change is:
         </Typography>
-      ))}
+        {Object.keys(occurrences).map((num) => (
+          <Typography key={num} component="p" variant="body1" ml={3}>
+            Coin: {num} x {occurrences[Number(num)]}
+          </Typography>
+        ))}
+      </Typography>
     </Wrapper>
   );
 };

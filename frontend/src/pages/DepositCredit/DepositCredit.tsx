@@ -26,7 +26,6 @@ const DepositCredit: React.FC = () => {
   const { mutateAsync } = useMutation(addCredit);
 
   const { data } = useQuery('user', fetchUser);
-
   useEffect(() => {
     if (data) {
       setDeposit(data.deposit!);
@@ -67,7 +66,7 @@ const DepositCredit: React.FC = () => {
         setErrorMessage(message);
       }
     }
-  }, []);
+  }, [coins, dispatch, user]);
 
   return (
     <Formik initialValues={initialValues!} validationSchema={schema} onSubmit={onSubmit}>

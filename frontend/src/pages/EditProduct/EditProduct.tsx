@@ -32,22 +32,14 @@ const EditProduct: React.FC = () => {
 
   const { mutateAsync } = useMutation(edit);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
-  if (!clickedItem) {
-    return <div>Product not found.</div>;
-  }
-
-  const initialValues: CartItem = clickedItem && {
-    _id: clickedItem._id,
-    productName: clickedItem.productName,
-    amountAvailable: clickedItem.amountAvailable || 0,
-    cost: clickedItem.cost,
-    sellerId: clickedItem.sellerId,
-    amount: clickedItem.amount,
-    sum: clickedItem.sum,
+  const initialValues: CartItem = clickedItem! && {
+    _id: clickedItem?._id,
+    productName: clickedItem?.productName,
+    amountAvailable: clickedItem?.amountAvailable || 0,
+    cost: clickedItem?.cost,
+    sellerId: clickedItem?.sellerId,
+    amount: clickedItem?.amount,
+    sum: clickedItem?.sum,
   };
 
   const onSubmit: (values: CartItem, formikHelpers: FormikHelpers<CartItem>) => void = useCallback(
@@ -55,6 +47,7 @@ const EditProduct: React.FC = () => {
       try {
         setSubmitting(true);
         await mutateAsync(values);
+        navigate('/');
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const message =
@@ -68,26 +61,37 @@ const EditProduct: React.FC = () => {
         setSubmitting(false);
       }
     },
-    []
+    [setErrorMessage]
   );
 
-  const handleDeleteClick = useCallback(async (_id: string, resetForm: () => void) => {
-    try {
-      await deleteItem({ _id });
+  const handleDeleteClick = useCallback(
+    async (_id: string, resetForm: () => void) => {
+      try {
+        await deleteItem({ _id });
 
-      resetForm();
-      navigate('/');
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message =
-          (error.response && error.response.data && error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setErrorMessage(message);
+        resetForm();
+        navigate('/');
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const message =
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString();
+          setErrorMessage(message);
+        }
+        logger.error('Error deleting product:', error);
       }
-      logger.error('Error deleting product:', error);
-    }
-  }, []);
+    },
+    [deleteItem]
+  );
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (!clickedItem) {
+    return <div>Product not found.</div>;
+  }
 
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>

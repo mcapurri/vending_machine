@@ -116,7 +116,7 @@ const Cart: React.FC<CartProps> = ({
         setSubmitting(false);
       }
     },
-    []
+    [setCartItems, navigate, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal]
   );
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>

@@ -19,6 +19,9 @@ const Item: React.FC<ItemProps> = memo(
     const { user } = useContext<ContextValueType>(UserContext);
     const matches = useMediaQuery('(max-width:450px)');
 
+    const isSeller = user.id === item.sellerId;
+    const isBuyer = user.role === 'buyer';
+
     return (
       <Wrapper>
         {}
@@ -35,7 +38,7 @@ const Item: React.FC<ItemProps> = memo(
             </Typography>
           )}
         </div>
-        {user.id && user.role === 'buyer' && (
+        {isBuyer && (
           <Button
             variant="outlined"
             onClick={() => handleAddToCart(item)}
@@ -45,7 +48,7 @@ const Item: React.FC<ItemProps> = memo(
           </Button>
         )}
 
-        {user.id && user.id === item.sellerId && (
+        {isSeller && (
           <EditButton
             variant="outlined"
             href={`/edit/${item._id}`}
