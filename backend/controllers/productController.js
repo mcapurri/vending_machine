@@ -83,48 +83,65 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-const buyProduct = async (req, res) => {
-  const { amount } = req.body;
-  const productId = req.params.id;
+const buyProducts = async (req, res) => {
+  const { products } = req.body;
   const user = req.user;
 
-  if (!productId || !amount || amount <= 0) {
-    return res.status(400).json({ message: "Invalid productId or amount" });
+  if (!products || !Array.isArray(products)) {
+    return res.status(400).json({ message: "Invalid product data" });
   }
+
   if (user.role !== "buyer") {
-    res.status(401).json({ message: "User not authorized to buy products" });
+    return res
+      .status(401)
+      .json({ message: "User not authorized to buy products" });
   }
 
   try {
-    const product = await Product.findById(productId);
+    let totalSpent = 0;
+    const purchasedProducts = [];
 
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+    for (const { _id, amount, cost } of products) {
+      if (!_id || !amount || amount <= 0) {
+        return res.status(400).json({ message: "Invalid productId or amount" });
+      }
+
+      const product = await Product.findById(_id);
+      if (!product) {
+        return res
+          .status(404)
+          .json({ message: `Product with ID ${_id} not found` });
+      }
+
+      const totalCost = product.cost * amount;
+      if (user.deposit < totalCost) {
+        return res.status(400).json({ message: "Insufficient funds" });
+      }
+
+      totalSpent += totalCost;
+
+      user.deposit -= totalCost;
+
+      product.amountAvailable -= amount;
+
+      purchasedProducts.push({
+        _id,
+        productName: product.productName,
+        amount,
+        cost,
+        sum: amount * cost,
+      });
+
+      await product.save();
     }
 
-    const totalCost = product.cost * amount;
-
-    if (user.deposit < totalCost) {
-      return res.status(400).json({ message: "Insufficient funds" });
-    }
-
-    // Deduct the total cost from the user's deposit
-    user.deposit -= totalCost;
     await user.save();
-
-    // Update the amountAvailable for the product
-    product.amountAvailable -= amount;
-    await product.save();
 
     res.status(200).json({
       message: "Purchase successful",
-      totalSpent: totalCost,
-      productsPurchased: {
-        productId: product._id,
-        productName: product.productName,
-        amount,
-      },
-      change: calculateChange(totalCost, user.deposit),
+      totalSpent,
+      purchasedProducts,
+      change: calculateChange(totalSpent, user.deposit),
     });
   } catch (error) {
     console.error("Error while buying products:", error);
@@ -152,5 +169,5 @@ module.exports = {
   addProduct,
   updateProduct,
   deleteProduct,
-  buyProduct,
+  buyProducts,
 };

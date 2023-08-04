@@ -5,13 +5,13 @@ const {
   addProduct,
   updateProduct,
   deleteProduct,
-  buyProduct,
+  buyProducts,
 } = require("../controllers/productController");
 const { protect } = require("../middleware/authMiddleware");
 
 router.get("/", getProducts);
 router.post("/add-product", protect, addProduct);
-router.put("/buy/:id", protect, buyProduct);
+router.post("/buy-products", protect, buyProducts);
 router
   .route("/edit/:id")
   .put(protect, updateProduct)

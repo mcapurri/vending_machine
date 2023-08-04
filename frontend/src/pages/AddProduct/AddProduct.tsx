@@ -49,7 +49,11 @@ const AddProduct: React.FC = () => {
         resetForm();
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          setErrorMessage(error.message);
+          const message =
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString();
+          setErrorMessage(message);
         }
         logger.error('Error adding product:', error);
       } finally {
@@ -81,7 +85,7 @@ const AddProduct: React.FC = () => {
               {isSubmitting ? (
                 <Spinner />
               ) : (
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                   <TextField
                     margin="normal"
                     required

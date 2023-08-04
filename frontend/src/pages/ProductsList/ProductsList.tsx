@@ -52,6 +52,7 @@ const ProductsList: React.FC = () => {
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
         <Cart
           cartItems={cartItems}
+          setCartItems={setCartItems}
           addToCart={handleAddToCart}
           removeFromCart={handleRemoveFromCart}
         />

@@ -60,7 +60,11 @@ const DepositCredit: React.FC = () => {
       setCoins([]);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setErrorMessage(error.message);
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setErrorMessage(message);
       }
     }
   };

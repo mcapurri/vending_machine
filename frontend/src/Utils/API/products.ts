@@ -12,7 +12,7 @@ export interface Product {
 
 export interface CartItem extends Product {
   amount: number;
-  sum: number;
+  sum?: number;
 }
 
 const API_URL = '/api/products';
@@ -66,5 +66,11 @@ export const edit = async ({
 export const deleteItem = async ({ _id }: Pick<Product, '_id'>): Promise<Product> => {
   const response = await axios.delete(`${API_URL}/edit/${_id}`, { headers });
   logger.log('deleted', response.data);
+  return response.data;
+};
+
+export const buyProducts = async (products: CartItem[]) => {
+  const response = await axios.post(`${API_URL}/buy-products`, { products }, { headers });
+
   return response.data;
 };

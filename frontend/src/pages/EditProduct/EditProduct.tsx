@@ -57,7 +57,11 @@ const EditProduct: React.FC = () => {
         await mutateAsync(values);
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          setErrorMessage(error.message);
+          const message =
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString();
+          setErrorMessage(message);
         }
         logger.error('Error updating product:', error);
       } finally {
@@ -75,7 +79,11 @@ const EditProduct: React.FC = () => {
       navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setErrorMessage(error.message);
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setErrorMessage(message);
       }
       logger.error('Error deleting product:', error);
     }

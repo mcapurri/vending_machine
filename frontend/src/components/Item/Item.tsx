@@ -1,5 +1,5 @@
 import React, { memo, useContext } from 'react';
-import { Button, useMediaQuery } from '@mui/material';
+import { Button, Typography, useMediaQuery } from '@mui/material';
 import { EditButton, Wrapper } from './style';
 import { CartItem } from '../../Utils/API/products';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
@@ -23,28 +23,18 @@ const Item: React.FC<ItemProps> = memo(
       <Wrapper>
         {}
         <div>
-          <p>{item.productName}</p>
-          <h3>€{item.cost}</h3>
+          <Typography component="p" variant="h6">
+            {item.productName}
+          </Typography>
+          <Typography component="h3" variant="h6">
+            €{item.cost}
+          </Typography>
+          {item.amountAvailable === 0 && (
+            <Typography component="p" variant="h5" color="red">
+              Out of Stock
+            </Typography>
+          )}
         </div>
-        {/* {user.id ? (
-          user.role === 'buyer' ? (
-            <Button
-              variant="outlined"
-              onClick={() => handleAddToCart(item)}
-              size={matches ? 'small' : 'medium'}
-            >
-              Add to cart
-            </Button>
-          ) : user.id === item.sellerId ? (
-            <EditButton
-              variant="outlined"
-              href={`/edit/${item._id}`}
-              size={matches ? 'small' : 'medium'}
-            >
-              Edit
-            </EditButton>
-          ) : null
-        ) : null} */}
         {user.id && user.role === 'buyer' && (
           <Button
             variant="outlined"
