@@ -69,7 +69,7 @@ export const deleteItem = async ({ _id }: Pick<Product, '_id'>): Promise<Product
   return response.data;
 };
 
-export const buyProducts = async (products: CartItem[]) => {
+export const buyProducts = async (products: CartItem[]): Promise<CartItem[]> => {
   const response = await axios.post(`${API_URL}/buy-products`, { products }, { headers });
 
   return response.data;

@@ -45,7 +45,7 @@ const DepositCredit: React.FC = () => {
     setCoins((prev) => [...prev, coinValue]);
   }, []);
 
-  const onSubmit: () => void = async () => {
+  const onSubmit: () => void = useCallback(async () => {
     try {
       const totalDeposit = await mutateAsync(coins);
       dispatch({
@@ -67,7 +67,7 @@ const DepositCredit: React.FC = () => {
         setErrorMessage(message);
       }
     }
-  };
+  }, []);
 
   return (
     <Formik initialValues={initialValues!} validationSchema={schema} onSubmit={onSubmit}>

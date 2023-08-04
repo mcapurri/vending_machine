@@ -18,6 +18,21 @@ const PurchaseSuccess: React.FC = () => {
   const { purchaseData, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal } = state;
   const { purchasedProducts, change } = purchaseData;
 
+  const uniqueNumbers: number[] = [];
+  const occurrences: { [key: number]: number } = {};
+
+  for (const num of change) {
+    if (!uniqueNumbers.includes(num)) {
+      uniqueNumbers.push(num);
+    }
+
+    if (!occurrences[num]) {
+      occurrences[num] = 1;
+    } else {
+      occurrences[num] += 1;
+    }
+  }
+
   return (
     <Wrapper>
       <TableContainer component={Paper}>
@@ -46,8 +61,8 @@ const PurchaseSuccess: React.FC = () => {
               <TableRow key={item._id}>
                 <TableCell>{item.productName}</TableCell>
                 <TableCell align="right">{item.amount}</TableCell>
-                <TableCell align="right">{`${item.cost.toFixed(2)}`}</TableCell>
-                <TableCell align="right">{`${item.sum!.toFixed(2)}`}</TableCell>
+                <TableCell align="right">{`${item?.cost?.toFixed(2)}`}</TableCell>
+                <TableCell align="right">{`${item?.sum?.toFixed(2)}`}</TableCell>
               </TableRow>
             ))}
             <TableRow>
@@ -81,6 +96,11 @@ const PurchaseSuccess: React.FC = () => {
       <Typography component="h1" variant="h6" ml={3} mt={3}>
         Your change is:
       </Typography>
+      {uniqueNumbers.map((num) => (
+        <Typography key={num} component="p" variant="body1" ml={3}>
+          Coin: {num} x {occurrences[num]}
+        </Typography>
+      ))}
     </Wrapper>
   );
 };

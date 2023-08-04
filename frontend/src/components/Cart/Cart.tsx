@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   TableContainer,
   Table,
@@ -10,12 +10,12 @@ import {
 } from '@mui/material';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { Paper, ShopNowButton } from './style';
-import Counter from '../Counter';
-import { CartItem, buyProducts } from '../../Utils/API/products';
 import { useMutation } from 'react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Paper, ShopNowButton } from './style';
+import Counter from '../Counter';
+import { CartItem, buyProducts } from '../../Utils/API/products';
 
 type CartProps = {
   cartItems: CartItem[];
@@ -92,30 +92,32 @@ const Cart: React.FC<CartProps> = ({
     ),
   });
 
-  const onSubmit = async (
-    values: { products: CartItem[] },
-    { setSubmitting }: FormikHelpers<{ products: CartItem[] }>
-  ) => {
-    try {
-      const data = await mutateAsync(values.products);
+  const onSubmit = useCallback(
+    async (
+      values: { products: CartItem[] },
+      { setSubmitting }: FormikHelpers<{ products: CartItem[] }>
+    ): Promise<void> => {
+      try {
+        const data = await mutateAsync(values.products);
 
-      setCartItems([]);
-      navigate('/success', {
-        state: { purchaseData: data, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal },
-      });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message =
-          (error.response && error.response.data && error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setErrorMessage(message);
+        setCartItems([]);
+        navigate('/success', {
+          state: { purchaseData: data, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal },
+        });
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const message =
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString();
+          setErrorMessage(message);
+        }
+      } finally {
+        setSubmitting(false);
       }
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
+    },
+    []
+  );
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
       <Form>

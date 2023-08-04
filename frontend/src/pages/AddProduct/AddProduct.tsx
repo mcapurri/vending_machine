@@ -34,7 +34,10 @@ const AddProduct: React.FC = () => {
   const { mutateAsync } = useMutation(add);
 
   const onSubmit = useCallback(
-    async (values: Product, { resetForm, setSubmitting }: FormikHelpers<Product>) => {
+    async (
+      values: Product,
+      { resetForm, setSubmitting }: FormikHelpers<Product>
+    ): Promise<void> => {
       const { productName, cost, amountAvailable } = values;
       try {
         setSubmitting(true);
