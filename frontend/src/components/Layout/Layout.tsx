@@ -6,7 +6,7 @@ import { Div } from './style';
 export function Layout(): JSX.Element {
   return (
     <Div>
-      <h1>Vendor Machine</h1>
+      <h1>Vending Machine</h1>
       <Header />
       <main>
         <Outlet />

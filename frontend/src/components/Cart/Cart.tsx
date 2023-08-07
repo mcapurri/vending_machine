@@ -26,7 +26,7 @@ type CartProps = {
 
 const TAX_RATE = 0.07;
 
-function ccyFormat(num: number): string {
+function moneyFormat(num: number): string {
   return `${num.toFixed(2)}`;
 }
 
@@ -144,8 +144,8 @@ const Cart: React.FC<CartProps> = ({
                     <Counter addToCart={addToCart} removeFromCart={removeFromCart} item={item} />
                   </TableCell>
                   <TableCell>{item.productName}</TableCell>
-                  <TableCell align="right">{ccyFormat(item.cost!)}</TableCell>
-                  <TableCell align="right">{ccyFormat(item.sum!)}</TableCell>
+                  <TableCell align="right">{moneyFormat(item.cost!)}</TableCell>
+                  <TableCell align="right">{moneyFormat(item.sum!)}</TableCell>
                 </TableRow>
               ))}
               <TableRow>
@@ -153,21 +153,21 @@ const Cart: React.FC<CartProps> = ({
                 <TableCell colSpan={2}>
                   <b>Subtotal</b>
                 </TableCell>
-                <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+                <TableCell align="right">{moneyFormat(invoiceSubtotal)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
                   <b>Tax</b>
                 </TableCell>
                 <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-                <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
+                <TableCell align="right">{moneyFormat(invoiceTaxes)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell colSpan={2}>
                   <b>Total</b>
                 </TableCell>
                 <TableCell align="right">
-                  <b>{ccyFormat(invoiceTotal)}</b>
+                  <b>{moneyFormat(invoiceTotal)}</b>
                 </TableCell>
               </TableRow>
             </TableBody>
