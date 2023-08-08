@@ -1,12 +1,22 @@
-import React, { useCallback, useContext } from 'react';
-import { useQuery } from 'react-query';
-// import { Drawer } from '@mui/material';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
 import { CartItem, fetch } from '../../Utils/API/products';
 import Cart from '../../components/Cart';
-import { Wrapper, Grid, Drawer } from './style';
+import { Wrapper, Grid } from './style';
 import Item from '../../components/Item';
 import Spinner from '../../components/Spinner';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
+import { formatPrice } from '../../Utils/format';
+import { fetchUser } from '../../Utils/API/auth';
 
 interface ProductsListProps {
   cartItems: CartItem[];
@@ -26,11 +36,37 @@ const ProductsList: React.FC<ProductsListProps> = ({
   cartOpen: boolean;
   setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { user } = useContext<ContextValueType>(UserContext);
-  const { data, isLoading } = useQuery<CartItem[]>('products', fetch);
+  const { user, dispatch } = useContext<ContextValueType>(UserContext);
+  const { data, isLoading: productLoading } = useQuery<CartItem[]>('products', fetch);
+  const { data: me, isLoading: userLoading, refetch } = useQuery('user', fetchUser);
+
+  console.log('me', me);
+
+  useEffect(() => {
+    if (me) {
+      refetch();
+      dispatch({
+        type: 'SET_USER',
+        payload: {
+          deposit: me?.deposit,
+          ...user,
+        },
+      });
+    }
+  }, [me?.deposit]);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
 
   const handleAddToCart = useCallback(
     (clickedItem: CartItem): void => {
+      console.log('clicked cost', clickedItem.cost);
+      console.log('deposit', me?.deposit);
+      if (me && me.deposit! < clickedItem.cost) {
+        setSelectedItem(clickedItem);
+        setDialogOpen(true);
+        return;
+      }
       setCartItems((prev: CartItem[]) => {
         const isItemInCart = prev.find((item) => item._id === clickedItem._id);
 
@@ -43,7 +79,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
         return [...prev, { ...clickedItem, amount: 1 }];
       });
     },
-    [setCartItems]
+    [setCartItems, me]
   );
 
   const handleRemoveFromCart = useCallback(
@@ -58,10 +94,15 @@ const ProductsList: React.FC<ProductsListProps> = ({
         }, [] as CartItem[])
       );
     },
-    [setCartItems]
+    [setCartItems, user.deposit]
   );
 
-  if (isLoading) {
+  const handleCloseDialog = useCallback(() => {
+    setDialogOpen(false);
+    setSelectedItem(null);
+  }, []);
+
+  if (userLoading || productLoading) {
     return <Spinner />;
   }
 
@@ -76,8 +117,18 @@ const ProductsList: React.FC<ProductsListProps> = ({
           removeFromCart={handleRemoveFromCart}
         />
       </Drawer>
+      {user.username && (
+        <>
+          <h2>
+            Welcome, {user.username}, your current credit is {formatPrice(me?.deposit!)}
+          </h2>
+          <p>
+            <a href="/deposit">Add credit now</a> and enjoy shopping with us
+          </p>
+        </>
+      )}
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} mt={3}>
         {data?.map((item: CartItem) => {
           return user.role === 'seller' && user.id === item.sellerId ? (
             <Grid key={item._id} item xs={12} sm={4}>
@@ -90,6 +141,21 @@ const ProductsList: React.FC<ProductsListProps> = ({
           ) : null;
         })}
       </Grid>
+
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Insufficient funds</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You do not have enough deposit to buy {selectedItem?.productName}. Please{' '}
+            <a href="/deposit">add credit</a> to your deposit before proceeding.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Wrapper>
   );
 };

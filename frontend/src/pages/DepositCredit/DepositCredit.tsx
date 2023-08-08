@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { Container, Box, Typography, TextField, Button, Grid, useMediaQuery } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import axios from 'axios';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { BigCoinImg, MediumCoinImg, SmallCoinImg } from './style';
@@ -51,6 +51,7 @@ const DepositCredit: React.FC = () => {
   const onSubmit: () => void = useCallback(async () => {
     try {
       const totalDeposit = await mutateAsync(coins);
+      localStorage.setItem('user', JSON.stringify({ ...user, deposit: totalDeposit }));
       dispatch({
         type: 'SET_USER',
         payload: {
@@ -60,6 +61,7 @@ const DepositCredit: React.FC = () => {
       });
 
       setDeposit(totalDeposit);
+      setErrorMessage('');
       setCoins([]);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -86,13 +88,19 @@ const DepositCredit: React.FC = () => {
               height: '100vh',
             }}
           >
-            <Typography component="h1" variant="h5" pb="6">
+            <Typography component="h1" variant="h4" pb="6">
+              {' '}
+              Your current credit is {formatPrice(deposit)}
+            </Typography>
+            <Typography component="h1" variant="h5" pb="6" mt={5}>
               {' '}
               New deposit is {formatPrice(amount)}
             </Typography>
-            <Typography component="h1" variant="h5" color="red">
-              {errorMessage}
+            <Typography component="p" pb="6" mt={5} color="blue">
+              {' '}
+              Select the amount you want to add to your credit
             </Typography>
+
             <Form onSubmit={handleSubmit}>
               <Grid mt={4}>
                 <Button onClick={() => handleDeposit(5)}>
@@ -133,12 +141,11 @@ const DepositCredit: React.FC = () => {
               </Grid>
               <TextField type="hidden" value={coins} id="coins" name="coins" margin="none" />
               <div>
-                <Typography component="h1" variant="h5" pb="6" mt={5}>
-                  {' '}
-                  Your current credit is {formatPrice(deposit)}
-                </Typography>
                 <Typography component="p" className="error" mb={8}>
                   {errors.deposit && touched.deposit && errors.deposit}
+                </Typography>
+                <Typography component="h1" variant="h5" color="red" mb={8}>
+                  {errorMessage}
                 </Typography>
               </div>
               <Button type="submit" fullWidth variant="contained" color="primary">

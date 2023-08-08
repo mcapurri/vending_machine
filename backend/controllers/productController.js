@@ -115,7 +115,9 @@ const buyProducts = async (req, res) => {
 
       const totalCost = product.cost * amount;
       if (user.deposit < totalCost) {
-        return res.status(400).json({ message: "Insufficient funds" });
+        return res.status(400).json({
+          message: "Insufficient funds. Please add credit to your deposit",
+        });
       }
 
       totalSpent += totalCost;
@@ -141,7 +143,7 @@ const buyProducts = async (req, res) => {
       message: "Purchase successful",
       totalSpent,
       purchasedProducts,
-      change: calculateChange(totalSpent, user.deposit),
+      change: calculateChange(user.deposit),
     });
   } catch (error) {
     console.error("Error while buying products:", error);

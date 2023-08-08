@@ -104,6 +104,7 @@ const Cart: React.FC<CartProps> = ({
         navigate('/success', {
           state: { purchaseData: data, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal },
         });
+        setCartOpen(false);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const message =
@@ -114,7 +115,6 @@ const Cart: React.FC<CartProps> = ({
         }
       } finally {
         setSubmitting(false);
-        setCartOpen(false);
       }
     },
     [setCartItems, navigate, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal]
