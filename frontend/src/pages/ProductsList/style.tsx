@@ -1,16 +1,15 @@
-import { IconButton as IconButtonMUI, styled } from '@mui/material';
+import { Grid as GridMUI, styled } from '@mui/material';
 
 export const Wrapper = styled('div')`
-  margin: 40px;
-  display: 'flex',
-  flexDirection: 'column',
-  height: 100vh
+  margin: 0 auto;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
-export const IconButton = styled(IconButtonMUI)`
-  position: fixed;
-  z-index: 100;
-  right: 20px;
-  top: 180px;
-  color: blue;
+export const Grid = styled(GridMUI)`
+  display: flex;
+  flex-direction: column;
+  alignitems: center;
 `;

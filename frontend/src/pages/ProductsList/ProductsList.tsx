@@ -1,22 +1,33 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useQuery } from 'react-query';
-import { Drawer, Grid, Badge } from '@mui/material';
-import { FaShoppingCart as CartIcon } from 'react-icons/fa';
+import { Drawer } from '@mui/material';
 import { CartItem, fetch } from '../../Utils/API/products';
 import Cart from '../../components/Cart';
-import { Wrapper, IconButton } from './style';
+import { Wrapper, Grid } from './style';
 import Item from '../../components/Item';
 import Spinner from '../../components/Spinner';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 
-const ProductsList: React.FC = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [cartOpen, setCartOpen] = useState(false);
+interface ProductsListProps {
+  cartItems: CartItem[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
+  cartOpen: boolean;
+  setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ProductsList: React.FC<ProductsListProps> = ({
+  cartItems,
+  setCartItems,
+  cartOpen,
+  setCartOpen,
+}: {
+  cartItems: CartItem[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
+  cartOpen: boolean;
+  setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const { user } = useContext<ContextValueType>(UserContext);
   const { data, isLoading } = useQuery<CartItem[]>('products', fetch);
-
-  const getTotalItems = (items: CartItem[]): number =>
-    items.reduce((acc, item) => acc + item.amount, 0);
 
   const handleAddToCart = useCallback(
     (clickedItem: CartItem): void => {
@@ -60,27 +71,16 @@ const ProductsList: React.FC = () => {
         <Cart
           cartItems={cartItems}
           setCartItems={setCartItems}
+          setCartOpen={setCartOpen}
           addToCart={handleAddToCart}
           removeFromCart={handleRemoveFromCart}
         />
       </Drawer>
 
-      <IconButton onClick={() => setCartOpen(true)}>
-        <Badge badgeContent={getTotalItems(cartItems)} color="error">
-          <CartIcon />
-        </Badge>
-      </IconButton>
-
-      <Grid container spacing={3} sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Grid container spacing={3}>
         {data?.map((item: CartItem) => {
           return user.role === 'seller' && user.id === item.sellerId ? (
-            <Grid
-              key={item._id}
-              item
-              xs={12}
-              sm={4}
-              sx={{ justifyContent: 'center', alignItems: 'flex-end' }}
-            >
+            <Grid key={item._id} item xs={12} sm={4}>
               <Item item={item} handleAddToCart={handleAddToCart} />
             </Grid>
           ) : user.role === 'buyer' ? (

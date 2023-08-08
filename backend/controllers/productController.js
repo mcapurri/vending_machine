@@ -149,18 +149,16 @@ const buyProducts = async (req, res) => {
   }
 };
 
-const calculateChange = (totalCost, deposit) => {
-  let changeAmount = deposit - totalCost;
+const calculateChange = (deposit) => {
   const availableCoins = [100, 50, 20, 10, 5];
   const change = [];
 
   for (const coin of availableCoins) {
-    while (changeAmount >= coin) {
+    while (deposit >= coin) {
       change.push(coin);
-      changeAmount -= coin;
+      deposit -= coin;
     }
   }
-
   return change;
 };
 

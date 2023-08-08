@@ -12,12 +12,13 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Wrapper } from './style';
 import { CartItem } from '../../Utils/API/products';
+import { formatPrice } from '../../Utils/format';
 
 const PurchaseSuccess: React.FC = () => {
   const { state } = useLocation();
   const { purchaseData, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal } = state;
   const { purchasedProducts, change } = purchaseData;
-
+  console.log(state);
   const occurrences: { [key: number]: number } = {};
 
   change.forEach((num: number) => {
@@ -52,8 +53,8 @@ const PurchaseSuccess: React.FC = () => {
               <TableRow key={item._id}>
                 <TableCell>{item.productName}</TableCell>
                 <TableCell align="right">{item.amount}</TableCell>
-                <TableCell align="right">{`${item?.cost?.toFixed(2)}`}</TableCell>
-                <TableCell align="right">{`${item?.sum?.toFixed(2)}`}</TableCell>
+                <TableCell align="right">{formatPrice(item?.cost)}</TableCell>
+                <TableCell align="right">{formatPrice(item.sum!)}</TableCell>
               </TableRow>
             ))}
             <TableRow>
@@ -61,21 +62,21 @@ const PurchaseSuccess: React.FC = () => {
               <TableCell colSpan={2}>
                 <b>Subtotal</b>
               </TableCell>
-              <TableCell align="right">{`${invoiceSubtotal.toFixed(2)}`}</TableCell>
+              <TableCell align="right">{formatPrice(invoiceSubtotal)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <b>Tax</b>
               </TableCell>
-              <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-              <TableCell align="right">{`${invoiceTaxes.toFixed(2)}`}</TableCell>
+              <TableCell align="right">{`${TAX_RATE} %`}</TableCell>
+              <TableCell align="right">{formatPrice(invoiceTaxes)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={2}>
                 <b>Total</b>
               </TableCell>
               <TableCell align="right">
-                <b>{`${invoiceTotal.toFixed(2)}`}</b>
+                <b>{formatPrice(invoiceTotal)}</b>
               </TableCell>
             </TableRow>
           </TableBody>

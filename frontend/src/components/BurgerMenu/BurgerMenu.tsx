@@ -1,11 +1,14 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser, FaHome, FaPlus, FaCoins } from 'react-icons/fa';
+import { FaHome, FaCoins, FaPlus, FaSignOutAlt, FaSignInAlt, FaUser } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import React, { useContext } from 'react';
-import { StyledHeader, LogoutButton } from './style';
+import { useContext } from 'react';
+import { StyledBurger, StyledMenu, Ul, LogoutButton } from './style';
 import { ContextValueType, UserContext, initialState } from '../../Context/UserContext';
 import { logout } from '../../Utils/API/auth';
 
-function Header(): JSX.Element {
+const Menu: React.FC<{ open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }> = ({
+  open,
+  setOpen,
+}) => {
   const navigate = useNavigate();
   const { user, dispatch } = useContext<ContextValueType>(UserContext);
 
@@ -16,27 +19,30 @@ function Header(): JSX.Element {
       payload: initialState,
     });
     navigate('/');
+    setOpen(false);
   };
-
+  const onLinkClick = (): void => {
+    setOpen(false);
+  };
   return (
-    <StyledHeader>
-      <div>
-        <Link to="/">
-          <FaHome /> Home
-        </Link>
-      </div>
-      <ul>
+    <StyledMenu open={open}>
+      <Ul>
+        <li>
+          <Link to="/" onClick={onLinkClick}>
+            <FaHome /> Home
+          </Link>
+        </li>
         {user.id ? (
           <>
             {user.role === 'buyer' ? (
               <li>
-                <Link to="/deposit">
+                <Link to="/deposit" onClick={onLinkClick}>
                   <FaCoins /> <span>Deposit</span>
                 </Link>
               </li>
             ) : (
               <li>
-                <Link to="/add">
+                <Link to="/add" onClick={onLinkClick}>
                   <FaPlus /> <span>Add product</span>
                 </Link>
               </li>
@@ -51,20 +57,33 @@ function Header(): JSX.Element {
         ) : (
           <>
             <li>
-              <Link to="/login">
+              <Link to="/login" onClick={onLinkClick}>
                 <FaSignInAlt /> <span>Login</span>
               </Link>
             </li>
             <li>
-              <Link to="/register">
+              <Link to="/register" onClick={onLinkClick}>
                 <FaUser /> <span>Sign up</span>
               </Link>
             </li>
           </>
         )}
-      </ul>
-    </StyledHeader>
+      </Ul>
+    </StyledMenu>
   );
-}
+};
 
-export default Header;
+const Burger: React.FC<{
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ open, setOpen }) => {
+  return (
+    <StyledBurger open={open} onClick={() => setOpen(!open)}>
+      <div />
+      <div />
+      <div />
+    </StyledBurger>
+  );
+};
+
+export { Menu, Burger };
