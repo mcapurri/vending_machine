@@ -14,6 +14,7 @@ import tenCents from '../../assets/10cents.png';
 import twentyCents from '../../assets/20cents.png';
 import fifthyCents from '../../assets/50cents.png';
 import oneEuro from '../../assets/1euro.png';
+import { formatPrice } from '../../Utils/format';
 
 type Deposit = Pick<User, 'deposit'>;
 
@@ -86,12 +87,8 @@ const DepositCredit: React.FC = () => {
             }}
           >
             <Typography component="h1" variant="h5" pb="6">
-              New deposit is{' '}
-              {(amount / 100).toLocaleString('de-DE', {
-                style: 'currency',
-                currency: 'EUR',
-                minimumFractionDigits: 2,
-              })}
+              {' '}
+              New deposit is {formatPrice(amount)}
             </Typography>
             <Typography component="h1" variant="h5" color="red">
               {errorMessage}
@@ -135,16 +132,15 @@ const DepositCredit: React.FC = () => {
                 </Button>
               </Grid>
               <TextField type="hidden" value={coins} id="coins" name="coins" margin="none" />
-              <Typography component="h1" variant="h5" pb="6" mt={5}>
-                Your current credit is{' '}
-                {(deposit / 100).toLocaleString('de-DE', {
-                  style: 'currency',
-                  currency: 'EUR',
-                })}
-              </Typography>
-              <Typography component="p" className="error" mb={8}>
-                {errors.deposit && touched.deposit && errors.deposit}
-              </Typography>
+              <div>
+                <Typography component="h1" variant="h5" pb="6" mt={5}>
+                  {' '}
+                  Your current credit is {formatPrice(deposit)}
+                </Typography>
+                <Typography component="p" className="error" mb={8}>
+                  {errors.deposit && touched.deposit && errors.deposit}
+                </Typography>
+              </div>
               <Button type="submit" fullWidth variant="contained" color="primary">
                 Add credit
               </Button>

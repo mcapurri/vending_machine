@@ -3,6 +3,7 @@ import { Button, Typography, useMediaQuery } from '@mui/material';
 import { EditButton, Wrapper } from './style';
 import { CartItem } from '../../Utils/API/products';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
+import { formatPrice } from '../../Utils/format';
 
 type ItemProps = {
   item: CartItem;
@@ -29,7 +30,7 @@ const Item: React.FC<ItemProps> = memo(
             {item.productName}
           </Typography>
           <Typography component="h3" variant="h6">
-            €{item.cost}
+            {formatPrice(item.cost)}
           </Typography>
           {item.amountAvailable === 0 && (
             <Typography component="p" variant="h5" color="red">

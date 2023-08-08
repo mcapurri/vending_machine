@@ -26,10 +26,10 @@ const PurchaseSuccess: React.FC = () => {
 
   return (
     <Wrapper>
+      <Typography component="h1" variant="h4" ml={10} mb={3}>
+        Receipt
+      </Typography>
       <TableContainer component={Paper}>
-        <Typography component="h1" variant="h4" ml={10} mb={3}>
-          Receipt
-        </Typography>
         <Table aria-label="spanning table">
           <TableHead>
             <TableRow>

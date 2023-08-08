@@ -44,7 +44,7 @@ const AddProduct: React.FC = () => {
 
         await mutateAsync({
           productName,
-          cost: Number(cost.toFixed(2)),
+          cost: Number(cost.toFixed(2)) * 100,
           amountAvailable,
           sellerId: user.id,
         });

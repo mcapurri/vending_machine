@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { FormEvent, useCallback, useState } from 'react';
 import {
   TableContainer,
   Table,
@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { Paper, ShopNowButton } from './style';
 import Counter from '../Counter';
 import { CartItem, buyProducts } from '../../Utils/API/products';
+import { formatPrice } from '../../Utils/format';
 
 type CartProps = {
   cartItems: CartItem[];
@@ -25,10 +26,6 @@ type CartProps = {
 };
 
 const TAX_RATE = 0.07;
-
-function moneyFormat(num: number): string {
-  return `${num.toFixed(2)}`;
-}
 
 function priceRow(amount: number, cost: number): number {
   return amount * cost;
@@ -144,8 +141,8 @@ const Cart: React.FC<CartProps> = ({
                     <Counter addToCart={addToCart} removeFromCart={removeFromCart} item={item} />
                   </TableCell>
                   <TableCell>{item.productName}</TableCell>
-                  <TableCell align="right">{moneyFormat(item.cost!)}</TableCell>
-                  <TableCell align="right">{moneyFormat(item.sum!)}</TableCell>
+                  <TableCell align="right">{formatPrice(item.cost!)}</TableCell>
+                  <TableCell align="right">{formatPrice(item.sum!)}</TableCell>
                 </TableRow>
               ))}
               <TableRow>
@@ -153,21 +150,21 @@ const Cart: React.FC<CartProps> = ({
                 <TableCell colSpan={2}>
                   <b>Subtotal</b>
                 </TableCell>
-                <TableCell align="right">{moneyFormat(invoiceSubtotal)}</TableCell>
+                <TableCell align="right">{formatPrice(invoiceSubtotal)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
                   <b>Tax</b>
                 </TableCell>
                 <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-                <TableCell align="right">{moneyFormat(invoiceTaxes)}</TableCell>
+                <TableCell align="right">{formatPrice(invoiceTaxes)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell colSpan={2}>
                   <b>Total</b>
                 </TableCell>
                 <TableCell align="right">
-                  <b>{moneyFormat(invoiceTotal)}</b>
+                  <b>{formatPrice(invoiceTotal)}</b>
                 </TableCell>
               </TableRow>
             </TableBody>
