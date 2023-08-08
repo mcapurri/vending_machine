@@ -1,9 +1,9 @@
 import React, { useCallback, useContext } from 'react';
 import { useQuery } from 'react-query';
-import { Drawer } from '@mui/material';
+// import { Drawer } from '@mui/material';
 import { CartItem, fetch } from '../../Utils/API/products';
 import Cart from '../../components/Cart';
-import { Wrapper, Grid } from './style';
+import { Wrapper, Grid, Drawer } from './style';
 import Item from '../../components/Item';
 import Spinner from '../../components/Spinner';
 import { ContextValueType, UserContext } from '../../Context/UserContext';

@@ -7,7 +7,7 @@ export const Paper = styled(PaperMUI)`
 `;
 
 export const ShopNowButton = styled(Button)`
-  width: 300px;
+  width: 200px;
   margin-left: 3%;
   font-weight: bold;
   background: lightgrey;
@@ -15,11 +15,23 @@ export const ShopNowButton = styled(Button)`
   border: 1px solid blue;
   align-self: center;
   justify-self: center;
+
+  @media screen and (min-width: 576px) {
+    width: 300px;
+  }
 `;
 
 export const CartContainer = styled('div')`
-  width: 400px; /* Adjust the width as needed */
+  width: 350px;
   padding: 1rem;
+  padding-left: 0;
   background-color: #ffffff;
   margin: 5% 0;
+  width: 100%;
+  overflow: hidden;
+
+  @media screen and (min-width: 576px) {
+    width: 400px;
+    padding: 1rem;
+  }
 `;
