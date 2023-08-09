@@ -62,24 +62,26 @@ const ProductsList: React.FC<ProductsListProps> = ({
 
   const handleAddToCart = useCallback(
     (clickedItem: CartItem): void => {
-      if (me && me.deposit! < clickedItem.cost) {
+      const totalCartCost = cartItems.reduce((total, item) => total + item.amount * item.cost, 0);
+
+      if (me && me.deposit && totalCartCost + clickedItem.cost <= me.deposit) {
+        setCartItems((prev: CartItem[]) => {
+          const isItemInCart = prev.find((item) => item._id === clickedItem._id);
+
+          if (isItemInCart) {
+            return prev.map((item) =>
+              item._id === clickedItem._id ? { ...item, amount: item.amount + 1 } : item
+            );
+          }
+
+          return [...prev, { ...clickedItem, amount: 1 }];
+        });
+      } else {
         setSelectedItem(clickedItem);
         setDialogOpen(true);
-        return;
       }
-      setCartItems((prev: CartItem[]) => {
-        const isItemInCart = prev.find((item) => item._id === clickedItem._id);
-
-        if (isItemInCart) {
-          return prev.map((item) =>
-            item._id === clickedItem._id ? { ...item, amount: item.amount + 1 } : item
-          );
-        }
-
-        return [...prev, { ...clickedItem, amount: 1 }];
-      });
     },
-    [setCartItems, me]
+    [setCartItems, cartItems, me]
   );
 
   const handleRemoveFromCart = useCallback(
