@@ -7,15 +7,33 @@ import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
 import DepositCredit from './pages/DepositCredit';
 import PurchaseSuccess from './pages/PurchaseSuccess';
-import { CartItem } from './Utils/API/products';
+import { CartItem, fetch } from './Utils/API/products';
 import ProductsList from './pages/ProductsList';
+import { useQuery } from 'react-query';
+import Spinner from './components/Spinner';
 
 function App(): JSX.Element {
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { data: products = [], isLoading: productLoading } = useQuery<CartItem[]>(
+    'products',
+    fetch
+  );
+
+  if (productLoading) {
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<Layout cartItems={cartItems} setCartOpen={setCartOpen} />}>
+      <Route
+        path="/"
+        element={<Layout cartItems={cartItems} setCartOpen={setCartOpen} products={products} />}
+      >
         <Route
           index
           element={
@@ -24,6 +42,7 @@ function App(): JSX.Element {
               setCartOpen={setCartOpen}
               cartItems={cartItems}
               setCartItems={setCartItems}
+              products={products}
             />
           }
         />

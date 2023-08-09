@@ -9,7 +9,7 @@ import {
   DialogTitle,
   Drawer,
 } from '@mui/material';
-import { CartItem, fetch } from '../../Utils/API/products';
+import { CartItem } from '../../Utils/API/products';
 import Cart from '../../components/Cart';
 import { Wrapper, Grid } from './style';
 import Item from '../../components/Item';
@@ -23,6 +23,7 @@ interface ProductsListProps {
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
   cartOpen: boolean;
   setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  products: CartItem[];
 }
 
 const ProductsList: React.FC<ProductsListProps> = ({
@@ -30,17 +31,19 @@ const ProductsList: React.FC<ProductsListProps> = ({
   setCartItems,
   cartOpen,
   setCartOpen,
+  products,
 }: {
   cartItems: CartItem[];
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
   cartOpen: boolean;
   setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  products: CartItem[];
 }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
   const { user, dispatch } = useContext<ContextValueType>(UserContext);
-  const { data, isLoading: productLoading } = useQuery<CartItem[]>('products', fetch);
+  // const { data: products, isLoading: productLoading } = useQuery<CartItem[]>('products', fetch);
   const { data: me, isLoading: userLoading, refetch } = useQuery('user', fetchUser);
-
-  console.log('me', me);
 
   useEffect(() => {
     if (me) {
@@ -54,9 +57,6 @@ const ProductsList: React.FC<ProductsListProps> = ({
       });
     }
   }, [me?.deposit]);
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
 
   const handleAddToCart = useCallback(
     (clickedItem: CartItem): void => {
@@ -102,7 +102,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
     setSelectedItem(null);
   }, []);
 
-  if (userLoading || productLoading) {
+  if (userLoading) {
     return <Spinner />;
   }
 
@@ -129,7 +129,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
       )}
 
       <Grid container spacing={3} mt={3}>
-        {data?.map((item: CartItem) => {
+        {products?.map((item: CartItem) => {
           return user.role === 'seller' && user.id === item.sellerId ? (
             <Grid key={item._id} item xs={12} sm={4}>
               <Item item={item} handleAddToCart={handleAddToCart} />

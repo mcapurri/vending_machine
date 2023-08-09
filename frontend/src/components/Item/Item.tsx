@@ -18,7 +18,7 @@ const Item: React.FC<ItemProps> = memo(
     handleAddToCart: (clickedItem: CartItem) => void;
   }) => {
     const { user } = useContext<ContextValueType>(UserContext);
-    const matches = useMediaQuery('(max-width:450px)');
+    const matches = useMediaQuery('(max-width:576px)');
 
     const isSeller = user.id === item.sellerId;
     const isBuyer = user.role === 'buyer';

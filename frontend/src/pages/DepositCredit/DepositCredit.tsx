@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { Container, Box, Typography, TextField, Button, Grid, useMediaQuery } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import axios from 'axios';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { BigCoinImg, MediumCoinImg, SmallCoinImg } from './style';
@@ -26,7 +26,7 @@ const DepositCredit: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { mutateAsync } = useMutation(addCredit);
 
-  const matches = useMediaQuery('(max-width:450px)');
+  const matches = useMediaQuery('(max-width:576px)');
 
   const { data } = useQuery('user', fetchUser);
 
