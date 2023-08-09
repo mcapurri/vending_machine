@@ -18,7 +18,6 @@ const PurchaseSuccess: React.FC = () => {
   const { state } = useLocation();
   const { purchaseData, invoiceSubtotal, TAX_RATE, invoiceTaxes, invoiceTotal } = state;
   const { purchasedProducts, change } = purchaseData;
-  console.log(state);
   const occurrences: { [key: number]: number } = {};
 
   change.forEach((num: number) => {

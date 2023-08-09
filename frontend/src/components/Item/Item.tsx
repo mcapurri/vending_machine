@@ -8,14 +8,17 @@ import { formatPrice } from '../../Utils/format';
 type ItemProps = {
   item: CartItem;
   handleAddToCart: (clickedItem: CartItem) => void;
+  isSelected: boolean;
 };
 const Item: React.FC<ItemProps> = memo(
   ({
     item,
     handleAddToCart,
+    isSelected,
   }: {
     item: CartItem;
     handleAddToCart: (clickedItem: CartItem) => void;
+    isSelected: boolean;
   }) => {
     const { user } = useContext<ContextValueType>(UserContext);
     const matches = useMediaQuery('(max-width:576px)');
@@ -24,7 +27,7 @@ const Item: React.FC<ItemProps> = memo(
     const isBuyer = user.role === 'buyer';
 
     return (
-      <Wrapper>
+      <Wrapper isSelected={isSelected}>
         <div>
           <Typography component="p" variant="h6">
             {item.productName}

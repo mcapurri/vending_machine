@@ -50,9 +50,7 @@ export const StyledMenu = styled('nav')<StyledMenuProps>(({ open }) => ({
 type StyledBurgerProps = ButtonProps & SxProps & { open?: boolean };
 
 export const StyledBurger = styled(Button)<StyledBurgerProps>(({ open }) => ({
-  position: 'absolute',
   top: '11%',
-  left: '1.5rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-around',

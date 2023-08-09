@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import {
   Button,
   Dialog,
@@ -24,6 +24,7 @@ interface ProductsListProps {
   cartOpen: boolean;
   setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
   products: CartItem[];
+  searchedItem: CartItem | null;
 }
 
 const ProductsList: React.FC<ProductsListProps> = ({
@@ -32,17 +33,18 @@ const ProductsList: React.FC<ProductsListProps> = ({
   cartOpen,
   setCartOpen,
   products,
+  searchedItem,
 }: {
   cartItems: CartItem[];
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
   cartOpen: boolean;
   setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
   products: CartItem[];
+  searchedItem: CartItem | null;
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
   const { user, dispatch } = useContext<ContextValueType>(UserContext);
-  // const { data: products, isLoading: productLoading } = useQuery<CartItem[]>('products', fetch);
   const { data: me, isLoading: userLoading, refetch } = useQuery('user', fetchUser);
 
   useEffect(() => {
@@ -60,8 +62,6 @@ const ProductsList: React.FC<ProductsListProps> = ({
 
   const handleAddToCart = useCallback(
     (clickedItem: CartItem): void => {
-      console.log('clicked cost', clickedItem.cost);
-      console.log('deposit', me?.deposit);
       if (me && me.deposit! < clickedItem.cost) {
         setSelectedItem(clickedItem);
         setDialogOpen(true);
@@ -117,10 +117,11 @@ const ProductsList: React.FC<ProductsListProps> = ({
           removeFromCart={handleRemoveFromCart}
         />
       </Drawer>
-      {user.username && (
+      {user.username && me !== undefined && (
         <>
           <h2>
-            Welcome, {user.username}, your current credit is {formatPrice(me?.deposit!)}
+            Welcome, {user.username}
+            {me?.deposit !== null ? <>, your current credit is {formatPrice(me.deposit!)}</> : null}
           </h2>
           <p>
             <a href="/deposit">Add credit now</a> and enjoy shopping with us
@@ -130,15 +131,22 @@ const ProductsList: React.FC<ProductsListProps> = ({
 
       <Grid container spacing={3} mt={3}>
         {products?.map((item: CartItem) => {
-          return user.role === 'seller' && user.id === item.sellerId ? (
-            <Grid key={item._id} item xs={12} sm={4}>
-              <Item item={item} handleAddToCart={handleAddToCart} />
-            </Grid>
-          ) : user.role === 'buyer' ? (
-            <Grid key={item._id} item xs={12} sm={4}>
-              <Item item={item} handleAddToCart={handleAddToCart} />
-            </Grid>
-          ) : null;
+          const isSellerItem = user.role === 'seller' && user.id === item.sellerId;
+          const isBuyerItem = user.role === 'buyer';
+
+          if ((isSellerItem || isBuyerItem) && (!searchedItem || searchedItem._id === item._id)) {
+            return (
+              <Grid key={item._id} item xs={12} sm={4}>
+                <Item
+                  item={item}
+                  handleAddToCart={handleAddToCart}
+                  isSelected={searchedItem === item}
+                />
+              </Grid>
+            );
+          }
+
+          return null;
         })}
       </Grid>
 
