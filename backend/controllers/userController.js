@@ -42,6 +42,10 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ username });
 
+    if (!user) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
+
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         id: user._id,
@@ -50,6 +54,8 @@ const loginUser = async (req, res) => {
         role: user.role,
         token: generateToken(user._id),
       });
+    } else {
+      res.status(400).json({ message: "Invalid credentials " });
     }
   } catch (error) {
     res.status(400).json({ message: "Invalid credentials " });
@@ -74,7 +80,7 @@ const fetchUser = async (req, res) => {
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "24h",
+    expiresIn: "30d",
   });
 };
 
@@ -90,7 +96,6 @@ const depositCredit = async (req, res) => {
       .json({ message: "Please provide an array of coins to deposit" });
   }
 
-  // Check if all coins are valid
   const invalidCoins = coins.filter((coin) => !validCoins.includes(coin));
   if (user.role === "buyer" && invalidCoins.length > 0) {
     return res.status(401).json({
@@ -99,7 +104,6 @@ const depositCredit = async (req, res) => {
     });
   }
   try {
-    // Calculate the total deposit and update user's deposit amount
     const totalDeposit = coins.reduce((acc, coin) => acc + coin, 0);
     user.deposit += totalDeposit;
     await user.save();

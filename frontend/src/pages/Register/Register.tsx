@@ -136,10 +136,15 @@ const Register: React.FC = () => {
                   name="username"
                   autoComplete="username"
                   autoFocus
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrorMessage('');
+                  }}
                   value={values.username}
                 />
-                <p className="error">{errors.username && touched.username && errors.username}</p>
+                <Typography component="p" color="red">
+                  {errors.username && touched.username && errors.username}
+                </Typography>
                 <TextField
                   margin="normal"
                   required
@@ -148,9 +153,14 @@ const Register: React.FC = () => {
                   label="Password"
                   type="password"
                   id="password"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrorMessage('');
+                  }}
                 />
-                <p className="error">{errors.password && touched.password && errors.password}</p>
+                <Typography component="p" color="red">
+                  {errors.password && touched.password && errors.password}
+                </Typography>
                 <TextField
                   margin="normal"
                   required
@@ -159,15 +169,23 @@ const Register: React.FC = () => {
                   label="Confirm Password"
                   type="password"
                   id="confirm"
-                  onChange={handleChange}
-                />{' '}
-                <p className="error">{errors.confirm && touched.confirm && errors.confirm}</p>
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrorMessage('');
+                  }}
+                />
+                <Typography component="p" color="red">
+                  {errors.confirm && touched.confirm && errors.confirm}
+                </Typography>
                 <FormControl>
                   <InputLabel>Your Role</InputLabel>
                   <Select
                     displayEmpty
                     value={values.role}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      setErrorMessage('');
+                    }}
                     label="Role"
                     name="role"
                   >

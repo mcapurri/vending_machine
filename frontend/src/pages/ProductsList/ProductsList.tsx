@@ -25,6 +25,7 @@ interface ProductsListProps {
   setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
   products: CartItem[];
   searchedItem: CartItem | null;
+  lastElementRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 const ProductsList: React.FC<ProductsListProps> = ({
@@ -34,6 +35,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
   setCartOpen,
   products,
   searchedItem,
+  lastElementRef,
 }: {
   cartItems: CartItem[];
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
@@ -41,6 +43,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
   setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
   products: CartItem[];
   searchedItem: CartItem | null;
+  lastElementRef: React.MutableRefObject<HTMLDivElement | null>;
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
@@ -132,13 +135,15 @@ const ProductsList: React.FC<ProductsListProps> = ({
       )}
 
       <Grid container spacing={3} mt={3}>
-        {products?.map((item: CartItem) => {
+        {products.map((item: CartItem, i: number) => {
           const isSellerItem = user.role === 'seller' && user.id === item.sellerId;
           const isBuyerItem = user.role === 'buyer';
 
+          const ref = products.length === i + 1 ? lastElementRef : null;
+
           if ((isSellerItem || isBuyerItem) && (!searchedItem || searchedItem._id === item._id)) {
             return (
-              <Grid key={item._id} item xs={12} sm={4}>
+              <Grid key={item._id} item xs={12} sm={4} ref={ref}>
                 <Item
                   item={item}
                   handleAddToCart={handleAddToCart}

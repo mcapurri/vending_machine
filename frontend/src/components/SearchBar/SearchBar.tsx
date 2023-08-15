@@ -34,7 +34,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const matches = useMediaQuery('(max-width:576px)');
 
-  const dataFiltered = filterData(searchQuery, products);
+  const filteredProducts = products
+    ? filterData(
+        searchQuery,
+        products.map((product) => product)
+      )
+    : [];
 
   const initialValues = {};
   const schema = {};
@@ -85,7 +90,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         </Form>
         <ProductsContainer>
           {searchQuery &&
-            dataFiltered.map((item) => (
+            filteredProducts.map((item) => (
               <Product key={item._id}>
                 <Button onClick={() => handleProductClick(item)}>{item.productName}</Button>
               </Product>

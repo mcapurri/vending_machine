@@ -98,12 +98,15 @@ const AddProduct: React.FC = () => {
                     name="productName"
                     autoComplete="productName"
                     autoFocus
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      setErrorMessage('');
+                    }}
                     value={values.productName}
                   />
-                  <p className="error">
+                  <Typography component="p" color="red">
                     {errors.productName && touched.productName && errors.productName}
-                  </p>
+                  </Typography>
                   <Grid item xs>
                     <TextField
                       margin="normal"
@@ -114,7 +117,10 @@ const AddProduct: React.FC = () => {
                       label="Amount available"
                       id="amountAvailable"
                       autoComplete="amountAvailable"
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e);
+                        setErrorMessage('');
+                      }}
                       value={values.amountAvailable}
                     />
                     <TextField
@@ -126,15 +132,19 @@ const AddProduct: React.FC = () => {
                       id="cost"
                       type="number"
                       autoComplete="cost"
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e);
+                        setErrorMessage('');
+                      }}
                       value={values.cost}
                     />
                   </Grid>
-                  <p className="error">
+                  <Typography component="p" color="red">
                     {errors.amountAvailable && touched.amountAvailable && errors.amountAvailable}
-                  </p>
-                  <p className="error">{errors.cost && touched.cost && errors.cost}</p>
-
+                  </Typography>
+                  <Typography component="p" color="red">
+                    {errors.cost && touched.cost && errors.cost}
+                  </Typography>
                   <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                     Add
                   </Button>

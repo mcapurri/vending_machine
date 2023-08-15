@@ -1,9 +1,37 @@
 const Product = require("../models/productModel");
 
-const getProducts = async (req, res) => {
-  const products = await Product.find();
-  res.status(200).json(products);
-};
+async function getProducts(req, res) {
+  try {
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 5;
+
+    if (page < 1 || limit < 1) {
+      return res.status(400).json({ error: "Invalid page or limit value" });
+    }
+
+    const offset = (page - 1) * limit;
+
+    const products = await Product.find().skip(offset).limit(limit).exec();
+
+    console.log("products", products);
+
+    const totalProducts = await Product.countDocuments();
+
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    res.status(200).json({
+      products,
+      currentPage: page,
+      totalPages,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching products" });
+  }
+}
+
 const addProduct = async (req, res) => {
   const user = req.user;
   const { amountAvailable, cost, productName, sellerId } = req.body;

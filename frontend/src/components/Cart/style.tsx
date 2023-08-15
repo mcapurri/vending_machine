@@ -28,7 +28,6 @@ export const CartContainer = styled('div')`
   background-color: #ffffff;
   margin: 5% 0;
   width: 100%;
-  overflow: hidden;
 
   @media screen and (min-width: 576px) {
     width: 400px;

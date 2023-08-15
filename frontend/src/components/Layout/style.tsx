@@ -6,8 +6,6 @@ export const Wrapper = styled('div')`
   flex-direction: column;
   align-items: center;
   width: 80vw;
-  height: 100vh;
-  overflow: hidden;
 `;
 
 export const Container = styled('div')`

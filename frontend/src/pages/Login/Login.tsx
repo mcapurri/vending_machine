@@ -42,6 +42,7 @@ const Login: React.FC = () => {
       values: FormikValues,
       {
         resetForm,
+        setTouched,
       }: FormikHelpers<{
         username: string;
         password: string;
@@ -71,8 +72,10 @@ const Login: React.FC = () => {
             error.toString();
           setErrorMessage(message);
         }
+      } finally {
+        resetForm();
+        setTouched({});
       }
-      resetForm();
     },
     [dispatch, navigate]
   );
@@ -109,10 +112,15 @@ const Login: React.FC = () => {
                   name="username"
                   autoComplete="username"
                   autoFocus
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrorMessage('');
+                  }}
                   value={values.username}
                 />
-                <p className="error">{errors.username && touched.username && errors.username}</p>
+                <Typography component="p" color="red">
+                  {errors.username && touched.username && errors.username}
+                </Typography>
                 <TextField
                   margin="normal"
                   required
@@ -122,10 +130,15 @@ const Login: React.FC = () => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrorMessage('');
+                  }}
                   value={values.password}
                 />
-                <p className="error">{errors.password && touched.password && errors.password}</p>
+                <Typography component="p" color="red">
+                  {errors.password && touched.password && errors.password}
+                </Typography>
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"

@@ -2,10 +2,10 @@ import React, { useCallback, useState } from 'react';
 import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { CartItem, edit, fetch, deleteItem } from '../../Utils/API/products';
+import { CartItem, edit, deleteItem } from '../../Utils/API/products';
 import Spinner from '../../components/Spinner';
 import logger from '../../Utils/logger';
 
@@ -26,9 +26,10 @@ const EditProduct: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const { data: cachedData, isLoading } = useQuery<CartItem[]>('products', fetch);
+  const queryClient = useQueryClient();
+  const cachedData = queryClient.getQueryData<CartItem[]>('products');
 
-  const clickedItem = cachedData?.find((item) => item._id === id);
+  const clickedItem = cachedData?.find((item: CartItem) => item._id === id);
 
   const { mutateAsync } = useMutation(edit);
 
@@ -85,7 +86,7 @@ const EditProduct: React.FC = () => {
     [deleteItem]
   );
 
-  if (isLoading) {
+  if (!cachedData) {
     return <Spinner />;
   }
 
@@ -125,12 +126,15 @@ const EditProduct: React.FC = () => {
                   name="productName"
                   autoComplete="productName"
                   autoFocus
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrorMessage('');
+                  }}
                   value={values.productName}
                 />
-                <p className="error">
+                <Typography component="p" color="red">
                   {errors.productName && touched.productName && errors.productName}
-                </p>
+                </Typography>
                 <Grid item xs>
                   <TextField
                     margin="normal"
@@ -141,7 +145,10 @@ const EditProduct: React.FC = () => {
                     id="amountAvailable"
                     type="number"
                     autoComplete="amountAvailable"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      setErrorMessage('');
+                    }}
                     value={values.amountAvailable}
                   />
                   <TextField
@@ -153,15 +160,19 @@ const EditProduct: React.FC = () => {
                     id="cost"
                     type="number"
                     autoComplete="cost"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      setErrorMessage('');
+                    }}
                     value={values.cost}
                   />
                 </Grid>
-                <p className="error">
+                <Typography component="p" color="red">
                   {errors.amountAvailable && touched.amountAvailable && errors.amountAvailable}
-                </p>
-                <p className="error">{errors.cost && touched.cost && errors.cost}</p>
-
+                </Typography>
+                <Typography component="p" color="red">
+                  {errors.cost && touched.cost && errors.cost}
+                </Typography>
                 <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                   Save changes
                 </Button>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery } from 'react-query';
 import { Layout } from './components/Layout/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -17,17 +17,46 @@ function App(): JSX.Element {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [searchedItem, setSearchedItem] = useState<CartItem | null>(null);
 
-  const { data: products = [], isLoading: productLoading } = useQuery<CartItem[]>(
+  const lastElementRef = useRef<HTMLDivElement | null>(null);
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery(
     'products',
-    fetch
+    fetch,
+    {
+      getNextPageParam: (lastPage) => {
+        return lastPage.currentPage < lastPage.totalPages ? lastPage.currentPage + 1 : undefined;
+      },
+    }
   );
 
-  if (productLoading) {
-    return (
-      <div>
-        <Spinner />
-      </div>
-    );
+  const flattenedProducts = useMemo(
+    () => (data ? data.pages.flatMap((page) => page.products) : []),
+    [data]
+  );
+
+  const handleObserver: IntersectionObserverCallback = (entries) => {
+    const [target] = entries;
+    if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, { threshold: 0.1 });
+
+    if (lastElementRef.current) {
+      observer.observe(lastElementRef.current);
+    }
+
+    return () => {
+      if (lastElementRef.current) {
+        observer.unobserve(lastElementRef.current);
+      }
+    };
+  }, [handleObserver]);
+
+  if (!data || isLoading) {
+    return <Spinner />;
   }
 
   return (
@@ -38,7 +67,7 @@ function App(): JSX.Element {
           <Layout
             cartItems={cartItems}
             setCartOpen={setCartOpen}
-            products={products}
+            products={flattenedProducts}
             setSearchedItem={setSearchedItem}
           />
         }
@@ -51,8 +80,9 @@ function App(): JSX.Element {
               setCartOpen={setCartOpen}
               cartItems={cartItems}
               setCartItems={setCartItems}
-              products={products}
+              products={flattenedProducts}
               searchedItem={searchedItem}
+              lastElementRef={lastElementRef}
             />
           }
         />
