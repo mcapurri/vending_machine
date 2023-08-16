@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { QueryFunction } from 'react-query';
-import { User } from './auth';
 import logger from '../logger';
 
 export interface Product {
@@ -23,11 +22,11 @@ export interface APIResults {
 }
 const API_URL = '/api/products';
 const LIMIT = 10;
-const user = localStorage.getItem('user');
-const parsedUser: Omit<User, 'password' | 'confirm'> = user ? JSON.parse(user) : null;
+
+const token = localStorage.getItem('token');
 
 const headers = {
-  Authorization: `Bearer ${parsedUser?.token}`,
+  Authorization: `Bearer ${token}`,
 };
 
 export const fetch: QueryFunction<APIResults, 'products'> = async ({ pageParam = 0 }) => {

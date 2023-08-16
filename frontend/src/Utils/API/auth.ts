@@ -29,6 +29,7 @@ const signupUser = async (values: FormikValues): Promise<User | null> => {
         ...response.data,
       })
     );
+    localStorage.setItem('user', JSON.stringify(response.data));
     localStorage.setItem('token', response.data.token);
   }
   return {
@@ -46,6 +47,7 @@ const login = async (values: FormikValues): Promise<User | null> => {
         ...response.data,
       })
     );
+    localStorage.setItem('user', JSON.stringify(response.data));
     localStorage.setItem('token', response.data.token);
   }
 
@@ -59,6 +61,8 @@ const fetchUser = async (): Promise<User> => {
   try {
     const response = await axios.get(`${API_URL}/fetch`, { headers });
 
+    localStorage.setItem('user', JSON.stringify(response.data));
+
     return response.data;
   } catch (error) {
     logger.error('Error fetching user:', error);
@@ -68,11 +72,13 @@ const fetchUser = async (): Promise<User> => {
 
 const logout = (): void => {
   localStorage.removeItem('user');
+  localStorage.removeItem('token');
 };
 
 const addCredit = async (coins: number[]): Promise<number> => {
   try {
     const response = await axios.post(`${API_URL}/deposit`, coins, { headers });
+
     return response.data.deposit;
   } catch (error) {
     logger.error('Error depositing coins:', error);

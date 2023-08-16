@@ -16,6 +16,7 @@ import Item from '../../components/Item';
 import Spinner from '../../components/Spinner';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { formatPrice } from '../../Utils/format';
+import { fetchUser } from '../../Utils/API/auth';
 
 interface ProductsListProps {
   cartItems: CartItem[];
@@ -46,7 +47,17 @@ const ProductsList: React.FC<ProductsListProps> = ({
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
-  const { user } = useContext<ContextValueType>(UserContext);
+  const { user, dispatch } = useContext<ContextValueType>(UserContext);
+  const { data: me } = useQuery('user', fetchUser);
+
+  useEffect(() => {
+    if (me) {
+      dispatch({
+        type: 'SET_USER',
+        payload: { deposit: me.deposit, ...user },
+      });
+    }
+  }, [me]);
 
   const handleAddToCart = useCallback(
     (clickedItem: CartItem): void => {
@@ -111,8 +122,8 @@ const ProductsList: React.FC<ProductsListProps> = ({
         <div>
           <h2>
             Welcome, {user.username}
-            {user?.role !== 'seller' && (
-              <span>, your current credit is {formatPrice(user.deposit!)}</span>
+            {me && user?.role !== 'seller' && (
+              <span>, your current credit is {formatPrice(me.deposit!)}</span>
             )}
           </h2>
           {user?.role !== 'seller' && (
