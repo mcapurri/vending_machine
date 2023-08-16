@@ -6,7 +6,6 @@ import {
   Link,
   FormControlLabel,
   Checkbox,
-  Button,
   Grid,
 } from '@mui/material';
 import { Formik, FormikHelpers, FormikValues } from 'formik';
@@ -18,6 +17,7 @@ import { useMutation } from 'react-query';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { login } from '../../Utils/API/auth';
 import Spinner from '../../components/Spinner';
+import { Button } from './style';
 
 const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -42,6 +42,7 @@ const Login: React.FC = () => {
       values: FormikValues,
       {
         resetForm,
+        setTouched,
       }: FormikHelpers<{
         username: string;
         password: string;
@@ -71,15 +72,17 @@ const Login: React.FC = () => {
             error.toString();
           setErrorMessage(message);
         }
+      } finally {
+        resetForm();
+        setTouched({});
       }
-      resetForm();
     },
     [dispatch, navigate]
   );
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
       {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" style={{ height: '100vh' }}>
           <Box
             sx={{
               marginTop: 8,
@@ -109,10 +112,15 @@ const Login: React.FC = () => {
                   name="username"
                   autoComplete="username"
                   autoFocus
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrorMessage('');
+                  }}
                   value={values.username}
                 />
-                <p className="error">{errors.username && touched.username && errors.username}</p>
+                <Typography component="p" color="red">
+                  {errors.username && touched.username && errors.username}
+                </Typography>
                 <TextField
                   margin="normal"
                   required
@@ -122,15 +130,20 @@ const Login: React.FC = () => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrorMessage('');
+                  }}
                   value={values.password}
                 />
-                <p className="error">{errors.password && touched.password && errors.password}</p>
+                <Typography component="p" color="red">
+                  {errors.password && touched.password && errors.password}
+                </Typography>
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"
                 />
-                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                <Button type="submit" fullWidth variant="contained">
                   Log In
                 </Button>
                 <Grid container>

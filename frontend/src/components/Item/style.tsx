@@ -8,7 +8,7 @@ export const Wrapper = styled('div')(({ isSelected }: { isSelected: boolean }) =
   justifyContent: 'space-between',
   alignItems: 'center',
   height: '100%',
-  backgroundColor: isSelected ? 'lightblue' : 'transparent',
+  backgroundColor: isSelected ? 'lightblue' : '#effffa;',
 
   button: {
     borderRadius: '10px',
@@ -24,7 +24,7 @@ export const Wrapper = styled('div')(({ isSelected }: { isSelected: boolean }) =
     height: '100%',
   },
 
-  '@media only screen and (min-width: 550px)': {
+  '@media only screen and (min-width: 576px)': {
     width: '60vw',
   },
 }));

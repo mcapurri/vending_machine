@@ -46,7 +46,7 @@ const Item: React.FC<ItemProps> = memo(
             variant="outlined"
             onClick={() => handleAddToCart(item)}
             size={matches ? 'small' : 'medium'}
-            disabled={item.amountAvailable === 0}
+            disabled={item.amountAvailable === 0 || user.id === ''}
           >
             Add to cart
           </Button>

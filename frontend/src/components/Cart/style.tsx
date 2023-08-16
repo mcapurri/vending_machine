@@ -4,6 +4,7 @@ export const Paper = styled(PaperMUI)`
   width: 100%;
   display: flex;
   flex-direction: column;
+  background: #effffa;
 `;
 
 export const ShopNowButton = styled(Button)`
@@ -25,10 +26,10 @@ export const CartContainer = styled('div')`
   width: 350px;
   padding: 1rem;
   padding-left: 0;
-  background-color: #ffffff;
   margin: 5% 0;
   width: 100%;
-  overflow: hidden;
+  height: 100% !important;
+  background: #effffa;
 
   @media screen and (min-width: 576px) {
     width: 400px;

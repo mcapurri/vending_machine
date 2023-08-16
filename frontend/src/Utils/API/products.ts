@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { QueryFunction } from 'react-query';
 import { User } from './auth';
 import logger from '../logger';
 
@@ -15,7 +16,13 @@ export interface CartItem extends Product {
   sum?: number;
 }
 
+export interface APIResults {
+  products: CartItem[];
+  totalPages: number;
+  currentPage: number;
+}
 const API_URL = '/api/products';
+const LIMIT = 10;
 const user = localStorage.getItem('user');
 const parsedUser: Omit<User, 'password' | 'confirm'> = user ? JSON.parse(user) : null;
 
@@ -23,9 +30,14 @@ const headers = {
   Authorization: `Bearer ${parsedUser?.token}`,
 };
 
-export const fetch = async (): Promise<CartItem[]> => {
-  const response = await axios.get<CartItem[]>(`${API_URL}/`);
-  return response.data;
+export const fetch: QueryFunction<APIResults, 'products'> = async ({ pageParam = 0 }) => {
+  const response = await axios.get(`${API_URL}?page=${pageParam}&limit=${LIMIT}`);
+
+  return {
+    products: response.data.products,
+    totalPages: response.data.totalPages,
+    currentPage: response.data.currentPage,
+  };
 };
 
 export const add = async ({

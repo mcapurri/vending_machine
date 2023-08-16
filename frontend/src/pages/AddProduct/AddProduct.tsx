@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
+import { Box, Container, Grid, TextField, Typography } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from 'react-query';
@@ -8,6 +8,7 @@ import { Product, add } from '../../Utils/API/products';
 import Spinner from '../../components/Spinner';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import logger from '../../Utils/logger';
+import { Button } from './style';
 
 const initialValues: Product = {
   _id: '',
@@ -98,12 +99,15 @@ const AddProduct: React.FC = () => {
                     name="productName"
                     autoComplete="productName"
                     autoFocus
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      setErrorMessage('');
+                    }}
                     value={values.productName}
                   />
-                  <p className="error">
+                  <Typography component="p" color="red">
                     {errors.productName && touched.productName && errors.productName}
-                  </p>
+                  </Typography>
                   <Grid item xs>
                     <TextField
                       margin="normal"
@@ -114,7 +118,10 @@ const AddProduct: React.FC = () => {
                       label="Amount available"
                       id="amountAvailable"
                       autoComplete="amountAvailable"
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e);
+                        setErrorMessage('');
+                      }}
                       value={values.amountAvailable}
                     />
                     <TextField
@@ -126,16 +133,20 @@ const AddProduct: React.FC = () => {
                       id="cost"
                       type="number"
                       autoComplete="cost"
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e);
+                        setErrorMessage('');
+                      }}
                       value={values.cost}
                     />
                   </Grid>
-                  <p className="error">
+                  <Typography component="p" color="red">
                     {errors.amountAvailable && touched.amountAvailable && errors.amountAvailable}
-                  </p>
-                  <p className="error">{errors.cost && touched.cost && errors.cost}</p>
-
-                  <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                  </Typography>
+                  <Typography component="p" color="red">
+                    {errors.cost && touched.cost && errors.cost}
+                  </Typography>
+                  <Button type="submit" fullWidth variant="contained">
                     Add
                   </Button>
                 </Box>

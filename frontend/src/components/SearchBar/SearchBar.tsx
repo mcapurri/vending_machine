@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TextField, IconButton, useMediaQuery, Button } from '@mui/material';
 import { FaSearch as SearchIcon } from 'react-icons/fa';
 import { Form, Formik } from 'formik';
@@ -32,9 +32,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [showSearchInput, setShowSearchInput] = useState(false);
 
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const productsContainerRef = useRef<HTMLDivElement | null>(null);
+
   const matches = useMediaQuery('(max-width:576px)');
 
-  const dataFiltered = filterData(searchQuery, products);
+  const filteredProducts = products
+    ? filterData(
+        searchQuery,
+        products.map((product) => product)
+      )
+    : [];
 
   const initialValues = {};
   const schema = {};
@@ -50,6 +58,25 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target as Node) &&
+        productsContainerRef.current &&
+        !productsContainerRef.current.contains(event.target as Node)
+      ) {
+        setSearchQuery('');
+        setSearchedItem(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setSearchQuery]);
+
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
       <Container>
@@ -64,7 +91,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             </IconButton>
           )}
           {showSearchInput && (
-            <SearchInput>
+            <SearchInput ref={searchInputRef}>
               <TextField
                 type="text"
                 placeholder="Search..."
@@ -78,14 +105,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
                   setSearchQuery('');
                 }}
               >
-                <SearchIcon style={{ fill: 'black' }} />
+                <SearchIcon style={{ fill: 'darkgreen' }} />
               </IconButton>
             </SearchInput>
           )}
         </Form>
-        <ProductsContainer>
+        <ProductsContainer ref={productsContainerRef}>
           {searchQuery &&
-            dataFiltered.map((item) => (
+            filteredProducts.map((item) => (
               <Product key={item._id}>
                 <Button onClick={() => handleProductClick(item)}>{item.productName}</Button>
               </Product>
