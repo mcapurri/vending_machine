@@ -53,7 +53,7 @@ function App(): JSX.Element {
         observer.unobserve(lastElementRef.current);
       }
     };
-  }, [handleObserver]);
+  }, [handleObserver, lastElementRef]);
 
   if (!data || isLoading) {
     return <Spinner />;

@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Box, Container, Grid, TextField, Typography } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from 'react-query';
@@ -8,6 +8,16 @@ import axios from 'axios';
 import { CartItem, edit, deleteItem } from '../../Utils/API/products';
 import Spinner from '../../components/Spinner';
 import logger from '../../Utils/logger';
+import { Button } from './style';
+
+interface CachedData {
+  pages: {
+    currentPage: number;
+    products: CartItem[];
+    totalPages: number;
+  }[];
+  pageParams: (number | undefined)[];
+}
 
 const schema = Yup.object().shape({
   productName: Yup.string()
@@ -27,9 +37,14 @@ const EditProduct: React.FC = () => {
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
-  const cachedData = queryClient.getQueryData<CartItem[]>('products');
+  const cachedData = queryClient.getQueryData<CachedData>('products');
 
-  const clickedItem = cachedData?.find((item: CartItem) => item._id === id);
+  const flattenedProducts = useMemo(
+    () => (cachedData ? cachedData.pages.flatMap((page) => page.products) : []),
+    [cachedData]
+  );
+
+  const clickedItem = flattenedProducts.find((item: CartItem) => item._id === id);
 
   const { mutateAsync } = useMutation(edit);
 
@@ -91,7 +106,7 @@ const EditProduct: React.FC = () => {
   }
 
   if (!clickedItem) {
-    return <div>Product not found.</div>;
+    return <Typography component="p">Product not found.</Typography>;
   }
 
   return (

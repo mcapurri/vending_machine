@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { IconButton, Badge } from '@mui/material';
 import { FaShoppingCart as CartIcon } from 'react-icons/fa';
 import { CartItem } from '../../Utils/API/products';
 import { Menu, Burger } from '../BurgerMenu';
-import { Div, Container, CartButtonContainer, Wrapper } from './style';
+import { Div, Container, CartButtonContainer, Wrapper, Title } from './style';
 import SearchBar from '../SearchBar';
+import { ContextValueType, UserContext } from '../../Context/UserContext';
 
 interface LayoutProps {
   cartItems: CartItem[];
@@ -31,9 +32,11 @@ export const Layout: React.FC<LayoutProps> = ({
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const { user } = useContext<ContextValueType>(UserContext);
+
   return (
     <Wrapper>
-      <h1>Vending Machine</h1>
+      <Title>Vending Machine</Title>
       <Container>
         <Div>
           <Burger open={open} setOpen={setOpen} />
@@ -46,13 +49,15 @@ export const Layout: React.FC<LayoutProps> = ({
             products={products}
             setSearchedItem={setSearchedItem}
           />
-          <CartButtonContainer>
-            <IconButton onClick={() => setCartOpen(true)}>
-              <Badge badgeContent={getTotalItems(cartItems)} color="error">
-                <CartIcon style={{ width: '2rem', color: 'black' }} />
-              </Badge>
-            </IconButton>
-          </CartButtonContainer>
+          {user.role === 'buyer' ? (
+            <CartButtonContainer>
+              <IconButton onClick={() => setCartOpen(true)}>
+                <Badge badgeContent={getTotalItems(cartItems)} color="error">
+                  <CartIcon style={{ width: '2rem', color: 'darkgreen' }} />
+                </Badge>
+              </IconButton>
+            </CartButtonContainer>
+          ) : null}
         </Div>
       </Container>
       <main>

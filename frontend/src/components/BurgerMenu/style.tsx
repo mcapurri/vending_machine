@@ -20,6 +20,7 @@ export const StyledMenu = styled('nav')<StyledMenuProps>(({ open }) => ({
   zIndex: 2,
   width: '80%',
   border: '1px solid black',
+  color: 'darkgreen',
 
   '@media (min-width: 576px)': {
     width: '35%',
@@ -61,6 +62,7 @@ export const StyledBurger = styled(Button)<StyledBurgerProps>(({ open }) => ({
   cursor: 'pointer',
   padding: 0,
   zIndex: 10,
+  color: 'darkgreen',
 
   '&:focus': {
     outline: 'none',

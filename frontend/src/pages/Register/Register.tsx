@@ -3,7 +3,6 @@ import {
   Container,
   Box,
   Typography,
-  Button,
   Grid,
   Link,
   TextField,
@@ -18,7 +17,7 @@ import axios from 'axios';
 import { useMutation } from 'react-query';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { signupUser } from '../../Utils/API/auth';
-import { FormControl } from './style';
+import { Button, FormControl } from './style';
 import Spinner from '../../components/Spinner';
 
 const Register: React.FC = () => {
@@ -193,7 +192,7 @@ const Register: React.FC = () => {
                     <MenuItem value="seller">Seller</MenuItem>
                   </Select>
                 </FormControl>
-                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                <Button type="submit" fullWidth variant="contained">
                   Sign Up
                 </Button>
                 <Grid container>

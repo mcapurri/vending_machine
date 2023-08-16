@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
+import { Box, Container, Grid, TextField, Typography } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from 'react-query';
@@ -8,6 +8,7 @@ import { Product, add } from '../../Utils/API/products';
 import Spinner from '../../components/Spinner';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import logger from '../../Utils/logger';
+import { Button } from './style';
 
 const initialValues: Product = {
   _id: '',
@@ -145,7 +146,7 @@ const AddProduct: React.FC = () => {
                   <Typography component="p" color="red">
                     {errors.cost && touched.cost && errors.cost}
                   </Typography>
-                  <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                  <Button type="submit" fullWidth variant="contained">
                     Add
                   </Button>
                 </Box>

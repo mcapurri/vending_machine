@@ -16,7 +16,6 @@ import Item from '../../components/Item';
 import Spinner from '../../components/Spinner';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { formatPrice } from '../../Utils/format';
-import { fetchUser } from '../../Utils/API/auth';
 
 interface ProductsListProps {
   cartItems: CartItem[];
@@ -47,27 +46,13 @@ const ProductsList: React.FC<ProductsListProps> = ({
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
-  const { user, dispatch } = useContext<ContextValueType>(UserContext);
-  const { data: me, isLoading: userLoading, refetch } = useQuery('user', fetchUser);
-
-  useEffect(() => {
-    if (me) {
-      refetch();
-      dispatch({
-        type: 'SET_USER',
-        payload: {
-          deposit: me?.deposit,
-          ...user,
-        },
-      });
-    }
-  }, [me?.deposit]);
+  const { user } = useContext<ContextValueType>(UserContext);
 
   const handleAddToCart = useCallback(
     (clickedItem: CartItem): void => {
       const totalCartCost = cartItems.reduce((total, item) => total + item.amount * item.cost, 0);
 
-      if (me && me.deposit && totalCartCost + clickedItem.cost <= me.deposit) {
+      if (user && user.deposit && totalCartCost + clickedItem.cost <= user.deposit) {
         setCartItems((prev: CartItem[]) => {
           const isItemInCart = prev.find((item) => item._id === clickedItem._id);
 
@@ -84,7 +69,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
         setDialogOpen(true);
       }
     },
-    [setCartItems, cartItems, me]
+    [setCartItems, cartItems, user]
   );
 
   const handleRemoveFromCart = useCallback(
@@ -107,7 +92,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
     setSelectedItem(null);
   }, []);
 
-  if (userLoading) {
+  if (!user) {
     return <Spinner />;
   }
 
@@ -122,16 +107,20 @@ const ProductsList: React.FC<ProductsListProps> = ({
           removeFromCart={handleRemoveFromCart}
         />
       </Drawer>
-      {user.username && me !== undefined && (
-        <>
+      {user.username && (
+        <div>
           <h2>
             Welcome, {user.username}
-            {me?.deposit !== null ? <>, your current credit is {formatPrice(me.deposit!)}</> : null}
+            {user?.role !== 'seller' && (
+              <span>, your current credit is {formatPrice(user.deposit!)}</span>
+            )}
           </h2>
-          <p>
-            <a href="/deposit">Add credit now</a> and enjoy shopping with us
-          </p>
-        </>
+          {user?.role !== 'seller' && (
+            <p>
+              <a href="/deposit">Add credit now</a> and enjoy shopping with us
+            </p>
+          )}
+        </div>
       )}
 
       <Grid container spacing={3} mt={3}>
@@ -139,7 +128,11 @@ const ProductsList: React.FC<ProductsListProps> = ({
           const isSellerItem = user.role === 'seller' && user.id === item.sellerId;
           const isBuyerItem = user.role === 'buyer';
 
-          const ref = products.length === i + 1 ? lastElementRef : null;
+          const currentItemIndex = i;
+
+          const isLastRenderedItem = currentItemIndex === products.length - 1;
+
+          const ref = isLastRenderedItem ? lastElementRef : null;
 
           if ((isSellerItem || isBuyerItem) && (!searchedItem || searchedItem._id === item._id)) {
             return (

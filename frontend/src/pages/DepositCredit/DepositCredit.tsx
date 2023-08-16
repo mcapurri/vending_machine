@@ -20,7 +20,6 @@ type Deposit = Pick<User, 'deposit'>;
 
 const DepositCredit: React.FC = () => {
   const { user, dispatch } = useContext<ContextValueType>(UserContext);
-
   const [coins, setCoins] = useState<number[]>([]);
   const [deposit, setDeposit] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -51,13 +50,12 @@ const DepositCredit: React.FC = () => {
   const onSubmit: () => void = useCallback(async () => {
     try {
       const totalDeposit = await mutateAsync(coins);
-      localStorage.setItem('user', JSON.stringify({ ...user, deposit: totalDeposit }));
+      const updatedUser = { ...user, deposit: totalDeposit };
+
+      localStorage.setItem('user', JSON.stringify(updatedUser));
       dispatch({
         type: 'SET_USER',
-        payload: {
-          deposit: totalDeposit,
-          ...user,
-        },
+        payload: updatedUser,
       });
 
       setDeposit(totalDeposit);

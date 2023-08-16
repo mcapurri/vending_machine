@@ -6,7 +6,6 @@ import {
   Link,
   FormControlLabel,
   Checkbox,
-  Button,
   Grid,
 } from '@mui/material';
 import { Formik, FormikHelpers, FormikValues } from 'formik';
@@ -18,6 +17,7 @@ import { useMutation } from 'react-query';
 import { ContextValueType, UserContext } from '../../Context/UserContext';
 import { login } from '../../Utils/API/auth';
 import Spinner from '../../components/Spinner';
+import { Button } from './style';
 
 const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
       {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" style={{ height: '100vh' }}>
           <Box
             sx={{
               marginTop: 8,
@@ -143,7 +143,7 @@ const Login: React.FC = () => {
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"
                 />
-                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                <Button type="submit" fullWidth variant="contained">
                   Log In
                 </Button>
                 <Grid container>

@@ -22,7 +22,7 @@ export interface APIResults {
   currentPage: number;
 }
 const API_URL = '/api/products';
-const LIMIT = 5;
+const LIMIT = 10;
 const user = localStorage.getItem('user');
 const parsedUser: Omit<User, 'password' | 'confirm'> = user ? JSON.parse(user) : null;
 
@@ -33,13 +33,11 @@ const headers = {
 export const fetch: QueryFunction<APIResults, 'products'> = async ({ pageParam = 0 }) => {
   const response = await axios.get(`${API_URL}?page=${pageParam}&limit=${LIMIT}`);
 
-  const mappedResponse: APIResults = {
+  return {
     products: response.data.products,
     totalPages: response.data.totalPages,
     currentPage: response.data.currentPage,
   };
-
-  return mappedResponse;
 };
 
 export const add = async ({
